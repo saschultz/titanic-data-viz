@@ -109,25 +109,42 @@ export class GraphComponent implements OnInit {
     });
 
 
-
-
-
-
+////
+// (function() {
+//
+// function dance() {
+//   var circle = d3.selectAll("#circle-dance circle"),
+//       span = d3.selectAll(".circle-dance-x"),
+//       data = d3.range(3).map(function() { return Math.random() * 720; });
+//
+//   circle.data(data).attr("cx", function(d) { return d; });
+//   span.data(data).text(function(d) { return d; });
+// }
+//
+// dance();
+// setInterval(dance, 2500);
+//
+// })();
 
 
     //button to scramble
-    d3.select("button").on("click", function(){
+
+    d3.select("button").on("click", function() {
+
+      function dance() {
+        d3.selectAll("circle")
+          .transition()
+          .attr("cx", function() { return Math.random() * 1300;})
+          .attr("cy", function() { return Math.random() * 800;})
+          .duration(4000)
+          .style("fill", "red");
+        }
+        dance();
+        setInterval(dance, 5000);
+      });
 
 
 
-      d3.selectAll("circle")
-        .transition()
-        .attr("cx", function() { return Math.random() * 1300;})
-        .attr("cy", function() { return Math.random() * 800;})
-        .duration(8000)
-        .style("fill", "red");
-
-    });
 
 
 
