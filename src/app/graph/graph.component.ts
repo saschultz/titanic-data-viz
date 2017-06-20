@@ -89,7 +89,7 @@ export class GraphComponent implements OnInit {
     svg.selectAll("dot")
       .data(data)
       .enter().append("circle")
-        .attr("r", function(d) {return (1 + 2*(+d.sibsp));})
+        .attr("r", function(d) {return (3 + 2*(+d.sibsp));})
 
         .attr("cx", function(d) { return x(d.age); })
         .attr("cy", function(d) { return y(d.fare); })
@@ -109,24 +109,6 @@ export class GraphComponent implements OnInit {
     });
 
 
-////
-// (function() {
-//
-// function dance() {
-//   var circle = d3.selectAll("#circle-dance circle"),
-//       span = d3.selectAll(".circle-dance-x"),
-//       data = d3.range(3).map(function() { return Math.random() * 720; });
-//
-//   circle.data(data).attr("cx", function(d) { return d; });
-//   span.data(data).text(function(d) { return d; });
-// }
-//
-// dance();
-// setInterval(dance, 2500);
-//
-// })();
-
-
     //button to scramble
 
     d3.select("button").on("click", function() {
@@ -137,10 +119,12 @@ export class GraphComponent implements OnInit {
           .attr("cx", function() { return Math.random() * 1300;})
           .attr("cy", function() { return Math.random() * 800;})
           .duration(4000)
-          .style("fill", "red");
+          .style("fill",function() {
+            return "hsl(" + Math.random() * 360 + ",90%,50%)";
+          });
         }
         dance();
-        setInterval(dance, 5000);
+        setInterval(dance, 4000);
       });
 
 
@@ -153,7 +137,7 @@ export class GraphComponent implements OnInit {
 
 
 
-    // // add the X Axis
+    // // // add the X Axis
     // svg.append("g")
     //     .attr("transform", "translate(0," + height + ")")
     //     .call(d3.axisBottom(x));
