@@ -1,3 +1,6 @@
+
+
+// Input: data from firebase. Output: ageRange object {max: some num, min: some num}
 export var findAgeRange = function(titanicData) {
   let ageRange = {max: -1, min: 1000};
 
@@ -19,6 +22,7 @@ export var findAgeRange = function(titanicData) {
 };
 
 
+//Input: data from firebase. Output: {Age: age count}
 export var breakdownAgeCount = function(titanicData) {
   let ages = {};
 
@@ -39,7 +43,8 @@ export var breakdownAgeCount = function(titanicData) {
 };
 
 
-export var excludeNaN = function(ageBreakdown) {
+//Input: {Age: age count}. Output: [{age: a specific age, count: the number of people of that age}]
+export var formatData = function(ageBreakdown) {
   console.log(ageBreakdown);
   delete ageBreakdown[NaN];
 
@@ -54,6 +59,7 @@ export var excludeNaN = function(ageBreakdown) {
 };
 
 
+//Input: {Age: age count}. Output: all the number of ages added up – i.e. 1310 because there are that many passengers on board.
 export var countTotalAgesNum = function(ageCount) { //counts number of ages
   let ageNum = null;
 
@@ -66,6 +72,7 @@ export var countTotalAgesNum = function(ageCount) { //counts number of ages
 };
 
 
+// Input: {Age: age count}, 1310 (from countTotalAgesNum). Output: {age: percentage of people of that age}
 export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
   let agePercentages = {};
 
@@ -77,7 +84,7 @@ export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
 
   }
 
-  //verification
+  //verification - should add up to ~100%
 
   let totalPercentage = null;
 
@@ -91,6 +98,7 @@ export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
 };
 
 
+//Input: min age in range, max age in range, {age: percentage of people of that age}. Output: percentage for that range (num).
 export var ageRangePercentage = function(min, max, agePercentages) {
   let percentage = 0; 
 
@@ -107,8 +115,6 @@ export var ageRangePercentage = function(min, max, agePercentages) {
 
 
 
-
-
 //BRAIN ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 export var brain = function(titanicData) {
@@ -119,7 +125,7 @@ export var brain = function(titanicData) {
   let agePercentages = ageByPercentage(ageBreakdown, totalAgeCount);
   let agePercentageRange = ageRangePercentage(20, 30, agePercentages);
 
-  let ageBreakExclNaN = excludeNaN(ageBreakdown);
+  let ageBreakExclNaN = formatData(ageBreakdown);
     
   return ageBreakExclNaN;
 };
