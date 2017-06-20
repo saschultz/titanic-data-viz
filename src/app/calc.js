@@ -117,8 +117,8 @@ export var ageRangePercentage = function(min, max, agePercentages) {
 
 //BRAIN ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-export var brain = function(titanicData) {
-  // findAgeRange();
+export var brain = function(titanicData, selectedGraph) {
+   // findAgeRange();
   let ageBreakdown = breakdownAgeCount(titanicData);
   let totalAgeCount = countTotalAgesNum(ageBreakdown);
 
@@ -126,15 +126,24 @@ export var brain = function(titanicData) {
   let agePercentageRange = ageRangePercentage(20, 30, agePercentages);
 
   let ageBreakExclNaN = formatData(ageBreakdown);
-    
-  return ageBreakExclNaN;
+
+  // Select a graph to display – return values
+
+  if (selectedGraph === 1) { return [titanicData, "age", "fare"]; }
+  if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count"]; }
 };
 
 
 
 // D3 ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-export var draw = function(d3, data) {
+export var draw = function(d3, preData) {
+
+  let dataArray = brain(preData, 2); 
+
+  let data = dataArray[0];
+  let prop1 = dataArray[1];
+  let prop2 = dataArray[2];
 
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 960 - margin.left - margin.right,
@@ -163,38 +172,80 @@ export var draw = function(d3, data) {
   // d3.csv("titanic3.csv", function(error, data) {
   //   if (error) throw error;
 
-    console.log(data);
     
     // format the data
     data.forEach(function(d) {
-        d.age = +d.age; // formats whatever d.age is in d3.csv to number
-        d.count = +d.count;
+        d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
+        d[prop2] = +d[prop2];
     });
 
     // scale the range of the data
     // d3.extent([1, 4, 3, 2]) -> [1, 4]
-    x.domain(d3.extent(data, function(d) { return d.age; })).nice();
-    y.domain(d3.extent(data, function(d) { return d.count; })).nice();
+    x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
+    y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
 
     // add the dots
     svg.selectAll("dot")
       .data(data)
       .enter().append("circle")
         .attr("r", 3)
-        .attr("cx", function(d) { return x(d.age); })
-        .attr("cy", function(d) { return y(d.count); })
+        .attr("cx", function(d) { return x(d[prop1]); })
+        .attr("cy", function(d) { return y(d[prop2]); })
         .on("click", function(d){
           d3.select(this).attr("cy", height);
         });
         
-        
-
     // add the X Axis
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
+        .attr("class", "x-axis")
         .call(d3.axisBottom(x));
 
     // add the Y Axis
     svg.append("g")
+        .attr("class", "y-axis")
         .call(d3.axisLeft(y));
+
+
+    //UPDATE GRAPH
+
+    d3.select("h4").on("click", function() {
+      updateDraw(d3, x, y, preData, 1);
+    });    
+
+};
+
+export var updateDraw = function(d3, x, y, preData, selectedGraph) {
+
+  let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
+
+  let data = dataArray[0];
+  let prop1 = dataArray[1];
+  let prop2 = dataArray[2];
+
+  data.forEach(function(d) {
+      d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
+      d[prop2] = +d[prop2];
+  });
+
+  x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
+  y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
+
+
+  d3.selectAll("circle")
+    .data(data)
+    .transition()
+    .duration(1000)
+    .attr("cx", function(d) {return x(d[prop1]);})
+    .attr("cy", function(d) {return y(d[prop2]);});
+
+  d3.select(".x-axis")
+    .transition()
+    .duration(1000)
+    .call(d3.axisBottom(x));
+
+  d3.select(".y-axis")
+    .transition()
+    .duration(1000)
+    .call(d3.axisLeft(y));
 };

@@ -41,8 +41,7 @@ export class GraphComponent implements OnInit {
 
     this.passengerService.getPassengers().subscribe(data => {
       this.passengers = data;
-      this.processedData = calc.brain(this.passengers);
-      calc.draw(d3, this.processedData);
+      calc.draw(d3, this.passengers);
     });
   }
 
