@@ -20,7 +20,7 @@ export class GraphComponent implements OnInit {
   private d3: D3;
   private parentNativeElement: any;
 
-  constructor(element: ElementRef, d3Service: D3Service, private passengerService: PassengerService) { 
+  constructor(element: ElementRef, d3Service: D3Service, private passengerService: PassengerService) {
     this.d3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
     this.parentNativeElement = element.nativeElement;
   }
@@ -73,7 +73,7 @@ export class GraphComponent implements OnInit {
   //   if (error) throw error;
 
     console.log(data);
-    
+
     // format the data
     data.forEach(function(d) {
         d.age = +d.age; // formats whatever d.age is in d3.csv to number
@@ -90,13 +90,32 @@ export class GraphComponent implements OnInit {
       .data(data)
       .enter().append("circle")
         .attr("r", 5)
+        .style("fill", "blue")
         .attr("cx", function(d) { return x(d.age); })
         .attr("cy", function(d) { return y(d.count); })
-        .on("click", function(d){
-          d3.select(this).style("fill", "red");
+        .on("click", function(d){ d3.select(this).style("fill", function(d){
+          if (d.age < 20) { return "yellow"}
+          else {return "green"}
+        }
+
+         ).transition().duration(400).attr("cy", height).style("fill", "gray");
+          console.log(d.age);
         });
-        
-        
+        // .on("click", function(d){
+        //   d3.select(this).style("fill", "red").transition().duration(400).attr("cy", height).style("fill", "gray");
+        //   console.log(d.age);
+        // });
+
+        // .on("click", function(d){
+        //   d3.select(this).append("test-text")
+        //     .text(<p>test</p>);
+        //
+        //   console.log(d);
+        // });
+
+        // d3.select(this).remove(); // -- Removes the dots
+
+
 
     // add the X Axis
     svg.append("g")
