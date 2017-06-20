@@ -139,7 +139,7 @@ export var brain = function(titanicData, selectedGraph) {
 
 export var draw = function(d3, preData) {
 
-  let dataArray = brain(preData, 2); 
+  let dataArray = brain(preData, 1); 
 
   let data = dataArray[0];
   let prop1 = dataArray[1];
@@ -191,8 +191,8 @@ export var draw = function(d3, preData) {
         .attr("r", 3)
         .attr("cx", function(d) { return x(d[prop1]); })
         .attr("cy", function(d) { return y(d[prop2]); })
-        .on("click", function(d){
-          d3.select(this).attr("cy", height);
+        .on("click", function(d) {
+          console.log(d);
         });
         
     // add the X Axis
@@ -210,12 +210,12 @@ export var draw = function(d3, preData) {
     //UPDATE GRAPH
 
     d3.select("h4").on("click", function() {
-      updateDraw(d3, x, y, preData, 1);
+      updateDraw(d3, svg, x, y, preData, 2);
     });    
 
 };
 
-export var updateDraw = function(d3, x, y, preData, selectedGraph) {
+export var updateDraw = function(d3, svg, x, y, preData, selectedGraph) {
 
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
@@ -238,6 +238,19 @@ export var updateDraw = function(d3, x, y, preData, selectedGraph) {
     .duration(1000)
     .attr("cx", function(d) {return x(d[prop1]);})
     .attr("cy", function(d) {return y(d[prop2]);});
+
+  svg.selectAll("circle")
+    .data(data)
+    .enter().append("circle")
+        .attr("r", 3)
+        .attr("cx", function(d) { return x(d[prop1]); })
+        .attr("cy", function(d) { return y(d[prop2]); })
+        .on("click", function(d) {
+          console.log(d);
+        });
+
+  svg.selectAll("circle")
+    .data(data).exit().remove();
 
   d3.select(".x-axis")
     .transition()
