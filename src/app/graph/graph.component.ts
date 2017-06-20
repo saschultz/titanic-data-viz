@@ -1,17 +1,23 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { D3Service, D3, Selection } from 'd3-ng2-service';
 
+import { FirebaseListObservable } from 'angularfire2/database';
+import { PassengerService } from '../passenger.service';
+
+import * as calc from '../calc.js';
+
 @Component({
   selector: 'app-graph',
   templateUrl: './graph.component.html',
-  styleUrls: ['./graph.component.css']
+  styleUrls: ['./graph.component.css'],
+  providers: [PassengerService]
 })
 export class GraphComponent implements OnInit {
 
   private d3: D3;
   private parentNativeElement: any;
 
-  constructor(element: ElementRef, d3Service: D3Service) { 
+  constructor(element: ElementRef, d3Service: D3Service, private passengerService: PassengerService) { 
     this.d3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
     this.parentNativeElement = element.nativeElement;
   }
@@ -26,6 +32,8 @@ export class GraphComponent implements OnInit {
 
       // Do d3 stuff
     }
+
+    
   }
 
 
