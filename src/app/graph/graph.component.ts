@@ -89,11 +89,11 @@ export class GraphComponent implements OnInit {
     svg.selectAll("dot")
       .data(data)
       .enter().append("circle")
-        .attr("r", 5)
+        .attr("r", 3)
         .attr("cx", function(d) { return x(d.age); })
         .attr("cy", function(d) { return y(d.count); })
         .on("click", function(d){
-          d3.select(this).style("fill", "red");
+          d3.select(this).attr("cy", height);
         });
         
         
