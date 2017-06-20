@@ -1,7 +1,4 @@
-var titanicData;
-
-
-export var findAgeRange = function() {
+export var findAgeRange = function(titanicData) {
   let ageRange = {max: -1, min: 1000};
 
   for (let i in titanicData) {
@@ -22,7 +19,7 @@ export var findAgeRange = function() {
 };
 
 
-export var breakdownAgeCount = function() {
+export var breakdownAgeCount = function(titanicData) {
   let ages = {};
 
   for (let i in titanicData) {
@@ -58,7 +55,7 @@ export var excludeNaN = function(ageBreakdown) {
 
 
 export var countTotalAgesNum = function(ageCount) { //counts number of ages
-  ageNum = null;
+  let ageNum = null;
 
   for (let i in ageCount) {
     if (!ageCount.hasOwnProperty(i)) {continue;}
@@ -131,7 +128,7 @@ export var draw = function(data) {
   // append the svg object to the body of the page
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select("div.graph").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -176,9 +173,9 @@ export var draw = function(data) {
 
 //BRAIN ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-export var brain = function() {
+export var brain = function(titanicData) {
   // findAgeRange();
-  let ageBreakdown = breakdownAgeCount();
+  let ageBreakdown = breakdownAgeCount(titanicData);
   let totalAgeCount = countTotalAgesNum(ageBreakdown);
 
   let agePercentages = ageByPercentage(ageBreakdown, totalAgeCount);
@@ -186,6 +183,6 @@ export var brain = function() {
 
   let ageBreakExclNaN = excludeNaN(ageBreakdown);
     
-  draw(ageBreakExclNaN);
+  return ageBreakExclNaN;
 };
 
