@@ -39,7 +39,7 @@ export class GraphComponent implements OnInit {
     this.passengerService.getPassengers().subscribe(data => {
       this.passengers = data;
       this.processedData = calc.brain(this.passengers);
-      this.draw(d3, this.processedData);
+      this.draw(d3, this.passengers);
     });
   }
 
@@ -77,26 +77,36 @@ export class GraphComponent implements OnInit {
     // format the data
     data.forEach(function(d) {
         d.age = +d.age; // formats whatever d.age is in d3.csv to number
-        d.count = +d.count;
+        d.fare = +d.fare;
     });
 
     // scale the range of the data
     // d3.extent([1, 4, 3, 2]) -> [1, 4]
     x.domain(d3.extent(data, function(d) { return d.age; })).nice();
-    y.domain(d3.extent(data, function(d) { return d.count; })).nice();
+    y.domain(d3.extent(data, function(d) { return d.fare; })).nice();
 
     // add the dots
     svg.selectAll("dot")
       .data(data)
       .enter().append("circle")
-        .attr("r", 5)
+        .attr("r", 3)
         .attr("cx", function(d) { return x(d.age); })
-        .attr("cy", function(d) { return y(d.count); })
+        .attr("cy", function(d) { return y(d.fare); })
         .on("click", function(d){
-          d3.select(this).style("fill", "red");
+          d3.select(this).attr("cy", 0);
         });
-        
-        
+    
+    d3.select("h4").on("click", function(){
+      d3.selectAll("circle").transition().duration(1000).attr("cy", function(c) {
+        if (c.survived === "0") {
+          return height;
+        } else {
+          return y(c.fare);
+        }
+      }).style("fill", "gray");
+     
+    });
+    
 
     // add the X Axis
     svg.append("g")
@@ -106,6 +116,5 @@ export class GraphComponent implements OnInit {
     // add the Y Axis
     svg.append("g")
         .call(d3.axisLeft(y));
-  // });
   };
 }
