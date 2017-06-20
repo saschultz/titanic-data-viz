@@ -93,6 +93,24 @@ export class GraphComponent implements OnInit {
 
         .attr("cx", function(d) { return x(d.age); })
         .attr("cy", function(d) { return y(d.fare); })
+//mouseover
+        .on("mouseover", function(d) {
+            d3.select(this).attr("r", d3.select(this).attr("r") * 1 + 10 )
+              d3.select('body')
+                .selectAll('#mouse-over')
+                .append('h2')
+                .text(d.name);
+          })
+
+//mouseout
+        .on("mouseout", function(d) {
+          d3.select(this).attr("r", d3.select(this).attr("r") * 1 - 10 )
+            d3.select('body')
+              .selectAll('#mouse-over')
+              .append('h2')
+              .text("");
+            })
+//click dot
         .on("click", function(d){
           d3.select(this).attr("cy", 0);
           console.log(d);
@@ -138,12 +156,12 @@ export class GraphComponent implements OnInit {
 
 
     // // // add the X Axis
-    // svg.append("g")
-    //     .attr("transform", "translate(0," + height + ")")
-    //     .call(d3.axisBottom(x));
-    //
-    // // add the Y Axis
-    // svg.append("g")
-    //     .call(d3.axisLeft(y));
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // add the Y Axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
   };
 }
