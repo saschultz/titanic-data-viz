@@ -97,11 +97,11 @@ export class GraphComponent implements OnInit {
         });
     
     d3.select("h4").on("click", function(){
-      d3.selectAll("circle").transition().duration(1000).attr("cy", function(c) {
-        if (c.survived === "0") {
+      d3.selectAll("circle").transition().duration(1000).attr("cy", function(d) {
+        if (d.survived === "0") {
           return height;
         } else {
-          return y(c.fare);
+          return y(d.fare);
         }
       }).style("fill", "gray");
      
