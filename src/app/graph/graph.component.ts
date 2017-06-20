@@ -82,8 +82,8 @@ export class GraphComponent implements OnInit {
 
     // scale the range of the data
     // this.d3.extent([1, 4, 3, 2]) -> [1, 4]
-    x.domain(this.d3.extent(data, function(d) { return d.age; }));
-    y.domain(this.d3.extent(data, function(d) { return d.count; }));
+    x.domain(this.d3.extent(data, function(d) { return d.age; })).nice();
+    y.domain(this.d3.extent(data, function(d) { return d.count; })).nice();
 
     // add the dots
     svg.selectAll("dot")
@@ -91,7 +91,12 @@ export class GraphComponent implements OnInit {
       .enter().append("circle")
         .attr("r", 5)
         .attr("cx", function(d) { return x(d.age); })
-        .attr("cy", function(d) { return y(d.count); });
+        .attr("cy", function(d) { return y(d.count); })
+        .on("click", (d => {
+          
+          console.log(d);
+        
+        }))
 
     // add the X Axis
     svg.append("g")
