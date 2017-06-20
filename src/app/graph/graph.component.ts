@@ -20,7 +20,7 @@ export class GraphComponent implements OnInit {
   private d3: D3;
   private parentNativeElement: any;
 
-  constructor(element: ElementRef, d3Service: D3Service, private passengerService: PassengerService) { 
+  constructor(element: ElementRef, d3Service: D3Service, private passengerService: PassengerService) {
     this.d3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
     this.parentNativeElement = element.nativeElement;
   }
@@ -46,8 +46,8 @@ export class GraphComponent implements OnInit {
   draw = function(d3, data) {
 
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+      width = 1300 - margin.left - margin.right,
+      height = 800 - margin.top - margin.bottom;
 
 
   // set the ranges
@@ -73,7 +73,7 @@ export class GraphComponent implements OnInit {
   //   if (error) throw error;
 
     console.log(data);
-    
+
     // format the data
     data.forEach(function(d) {
         d.age = +d.age; // formats whatever d.age is in d3.csv to number
@@ -89,32 +89,60 @@ export class GraphComponent implements OnInit {
     svg.selectAll("dot")
       .data(data)
       .enter().append("circle")
-        .attr("r", 3)
+        .attr("r", function(d) {return (1 + 2*(+d.sibsp));})
+
         .attr("cx", function(d) { return x(d.age); })
         .attr("cy", function(d) { return y(d.fare); })
         .on("click", function(d){
           d3.select(this).attr("cy", 0);
+          console.log(d);
         });
-    
     d3.select("h4").on("click", function(){
-      d3.selectAll("circle").transition().duration(1000).attr("cy", function(c) {
-        if (c.survived === "0") {
+      d3.selectAll("circle").transition().duration(1000).attr("cy", function(d) {
+        if (d.survived === "0") {
           return height;
         } else {
-          return y(c.fare);
+          return y(d.fare);
         }
       }).style("fill", "gray");
-     
+
     });
-    
 
-    // add the X Axis
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
 
-    // add the Y Axis
-    svg.append("g")
-        .call(d3.axisLeft(y));
+
+
+
+
+
+
+    //button to scramble
+    d3.select("button").on("click", function(){
+
+
+
+      d3.selectAll("circle")
+        .transition()
+        .attr("cx", function() { return Math.random() * 1300;})
+        .attr("cy", function() { return Math.random() * 800;})
+        .duration(8000)
+        .style("fill", "red");
+
+    });
+
+
+
+
+
+
+
+
+    // // add the X Axis
+    // svg.append("g")
+    //     .attr("transform", "translate(0," + height + ")")
+    //     .call(d3.axisBottom(x));
+    //
+    // // add the Y Axis
+    // svg.append("g")
+    //     .call(d3.axisLeft(y));
   };
 }
