@@ -116,11 +116,55 @@ export var ageRangePercentage = function(min, max, agePercentages) {
 
 // Input: raw data. Output: rawData with new properties for x and y values.
 export var sortByGender = function(titanicData) {
-
+  let male = [],
+      female = [],
+      sortedByGender = [];
 
   for (let i in titanicData) {
-    console.log(i);
+    if (titanicData[i].sex === "male") { male.push(titanicData[i]); }
+    if  (titanicData[i].sex === "female") { female.push(titanicData[i]); }
   }
+  sortedByGender.push(male, female);
+  return sortedByGender;
+};
+
+export var assignXY = function(genderArray) {
+  let male = genderArray[0],
+      female = genderArray[1],
+      currentMX = 10,
+      currentMY = 10,
+      currentFX = 45,
+      currentFY = 10;
+
+  
+  for (let i = 0; i < male.length; i+=20) {
+    for (let j = 0; j < 21; j++) {
+      if (i + j < male.length) {
+        male[i+j].x = currentMX;
+        male[i+j].y = currentMY;
+      }
+      currentMX += 1;
+    }
+    currentMX = 10;
+    currentMY += 2;
+  }
+
+  for (let i = 0; i < female.length; i+=20) {
+    for (let j = 0; j < 21; j++) {
+      if (i + j < female.length) {
+        female[i+j].x = currentFX;
+        female[i+j].y = currentFY;
+      }
+      currentFX += 1;
+    }
+    currentFX = 45;
+    currentFY += 2;
+  }
+
+  let maleFemale = male.concat(female);
+  return maleFemale;
+
+  
 };
 
 
@@ -137,11 +181,16 @@ export var brain = function(titanicData, selectedGraph) {
 
   let ageBreakExclNaN = formatData(ageBreakdown);
 
+  let genderArray = sortByGender(titanicData);
+
+  let maleFemale = (assignXY(genderArray));
+
   // Select a graph to display – return values
 
-  if (selectedGraph === 1) { return [titanicData, "age", "fare"]; }
-  if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count"]; }
-  if (selectedGraph === 3) { return [titanicData, "age", "survived"]; }
+  if (selectedGraph === 1) { return [titanicData, "age", "fare", "scatter"]; }
+  if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
+  if (selectedGraph === 3) { return [maleFemale, "x", "y", "cluster"]; }
+
 };
 
 
@@ -163,8 +212,11 @@ export var drawScatter = function(d3, preData) {
 
   // set the ranges
 
+ 
   var x = d3.scaleLinear().range([0, width]);
   var y = d3.scaleLinear().range([height, 0]);
+ 
+
   // define the line
 
 
@@ -185,52 +237,64 @@ export var drawScatter = function(d3, preData) {
 
     
     // format the data
-    data.forEach(function(d) {
-        d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
-        d[prop2] = +d[prop2];
-    });
+  data.forEach(function(d) {
+      d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
+      d[prop2] = +d[prop2];
+  });
 
-    // scale the range of the data
-    // d3.extent([1, 4, 3, 2]) -> [1, 4]
-    x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
-    y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
+  // scale the range of the data
+  // d3.extent([1, 4, 3, 2]) -> [1, 4]
+  
+  x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
+  y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
 
-    // add the dots
-    svg.selectAll("dot")
-      .data(data)
-      .enter().append("circle")
-        .attr("r", 3)
-        .attr("cx", function(d) { return x(d[prop1]); })
-        .attr("cy", function(d) { return y(d[prop2]); })
-        .on("click", function(d) {
-          console.log(d);
-        });
+
+
+  // add the dots
+  svg.selectAll("dot")
+    .data(data)
+    .enter().append("circle")
+      .attr("r", 2.5)
+      .attr("cx", function(d) { return x(d[prop1]); })
+      .attr("cy", function(d) { return y(d[prop2]); })
+      .on("click", function(d) {
+        console.log(d);
+      });
+      
+  // add the X Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .attr("class", "x-axis")
+      .call(d3.axisBottom(x));
+
+  // add the Y Axis
+  svg.append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y));
+
+
+  //UPDATE GRAPH
+  d3.select("h6").on("click", function() {
+    d3.selectAll("circle").transition().duration(1000).attr("cy", function(d) {
+      if (d.survived === "0") {
+        return (height);
+      } else {
         
-    // add the X Axis
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .attr("class", "x-axis")
-        .call(d3.axisBottom(x));
-
-    // add the Y Axis
-    svg.append("g")
-        .attr("class", "y-axis")
-        .call(d3.axisLeft(y));
-
-
-    //UPDATE GRAPH
-
-    d3.select("h4").on("click", function() {
-      updateDrawScatter(d3, svg, x, y, height, preData, 2);
-    });    
-
-    d3.select("h3").on("click", function() {
-      updateDrawScatter(d3, svg, x, y, height, preData, 1);
+      }
     });
+  });
 
-    d3.select("h6").on("click", function() {
-      updateDrawScatter(d3, svg, x, y, height, preData, 3);
-    });
+  d3.select("h4").on("click", function() {
+    updateDrawScatter(d3, svg, x, y, height, preData, 2);
+  });    
+
+  d3.select("h3").on("click", function() {
+    updateDrawScatter(d3, svg, x, y, height, preData, 1);
+  });
+
+  d3.select("h5").on("click", function() {
+    updateDrawScatter(d3, svg, x, y, height, preData, 3);
+  });
 };
 
 
@@ -243,50 +307,73 @@ export var updateDrawScatter = function(d3, svg, x, y, height, preData, selected
 
   let data = dataArray[0],
       prop1 = dataArray[1],
-      prop2 = dataArray[2];
+      prop2 = dataArray[2],
+      type = dataArray[3];
 
   data.forEach(function(d) {
       d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
       d[prop2] = +d[prop2];
   });
 
-  x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
-  y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
+ if (type === "scatter") {
+    x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
+    y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
+  } else if (type === "cluster") {
+    x.domain([0, 100]);
+    y.domain([0, 100]);
+  }
 
   svg.selectAll("circle")
     .data(data)
     .enter().append("circle")
-        .attr("r", 3)
-        .attr("cx", 0)
-        .attr("cy", height)
+      .attr("r", 2.5)
+      .attr("cx", function(d) { return x(d[prop1]); })
+      .attr("cy", function(d) { return y(d[prop2]); })
         .on("click", function(d) {
           console.log(d);
         });
 
-  d3.selectAll("circle")
-    .data(data)
-    .transition()
-    .duration(800)
-    .attr("cx", function(d) {return x(d[prop1]);})
-    .attr("cy", function(d) {return y(d[prop2]);});
+    d3.selectAll("circle")
+      .data(data)
+      .transition()
+      .duration(800)
+      .attr("cx", function(d) {return x(d[prop1]);})
+      .attr("cy", function(d) {return y(d[prop2]);});
 
-  d3.selectAll("circle")
-    .data(data)
-    .exit()
-    .transition()
-    .duration(600)
-    .attr("cx", 0)
-    .attr("cy", height).remove();
+    d3.selectAll("circle")
+      .data(data)
+      .exit()
+      .transition()
+      .duration(600)
+      .attr("cx", 0)
+      .attr("cy", height).remove();
 
-  d3.select(".x-axis")
-    .transition()
-    .duration(1000)
-    .call(d3.axisBottom(x));
+//AXIS
 
-  d3.select(".y-axis")
-    .transition()
-    .duration(1000)
-    .call(d3.axisLeft(y));
+    if (type === "scatter") {
+      d3.select(".x-axis")
+        .transition()
+        .duration(400)
+        .style("opacity", 100)
+        .call(d3.axisBottom(x));
+
+      d3.select(".y-axis")
+        .transition()
+        .duration(400)
+        .style("opacity", 100)
+        .call(d3.axisLeft(y));
+
+    } else if (type === "cluster") {
+      d3.select(".x-axis")
+        .transition()
+        .duration(600)
+        .style("opacity", 0);
+
+        d3.select(".y-axis")
+        .transition()
+        .duration(600)
+        .style("opacity", 0);
+    }
 };
 
 
