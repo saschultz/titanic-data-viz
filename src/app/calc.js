@@ -114,6 +114,16 @@ export var ageRangePercentage = function(min, max, agePercentages) {
 };
 
 
+// Input: raw data. Output: rawData with new properties for x and y values.
+export var sortByGender = function(titanicData) {
+
+
+  for (let i in titanicData) {
+    console.log(i);
+  }
+};
+
+
 
 //BRAIN ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
@@ -131,23 +141,24 @@ export var brain = function(titanicData, selectedGraph) {
 
   if (selectedGraph === 1) { return [titanicData, "age", "fare"]; }
   if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count"]; }
+  if (selectedGraph === 3) { return [titanicData, "age", "survived"]; }
 };
 
 
 
 // D3 ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-export var draw = function(d3, preData) {
+export var drawScatter = function(d3, preData) {
 
-  let dataArray = brain(preData, 1); 
+  let dataArray = brain(preData, 2); 
 
-  let data = dataArray[0];
-  let prop1 = dataArray[1];
-  let prop2 = dataArray[2];
+  let data = dataArray[0],
+      prop1 = dataArray[1],
+      prop2 = dataArray[2];
 
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+      width = 1200 - margin.left - margin.right,
+      height = 550 - margin.top - margin.bottom;
 
 
   // set the ranges
@@ -210,18 +221,29 @@ export var draw = function(d3, preData) {
     //UPDATE GRAPH
 
     d3.select("h4").on("click", function() {
-      updateDraw(d3, svg, x, y, preData, 2);
+      updateDrawScatter(d3, svg, x, y, height, preData, 2);
     });    
 
+    d3.select("h3").on("click", function() {
+      updateDrawScatter(d3, svg, x, y, height, preData, 1);
+    });
+
+    d3.select("h6").on("click", function() {
+      updateDrawScatter(d3, svg, x, y, height, preData, 3);
+    });
 };
 
-export var updateDraw = function(d3, svg, x, y, preData, selectedGraph) {
+
+
+
+
+export var updateDrawScatter = function(d3, svg, x, y, height, preData, selectedGraph) {
 
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
-  let data = dataArray[0];
-  let prop1 = dataArray[1];
-  let prop2 = dataArray[2];
+  let data = dataArray[0],
+      prop1 = dataArray[1],
+      prop2 = dataArray[2];
 
   data.forEach(function(d) {
       d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
@@ -231,26 +253,30 @@ export var updateDraw = function(d3, svg, x, y, preData, selectedGraph) {
   x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
   y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
 
-
-  d3.selectAll("circle")
-    .data(data)
-    .transition()
-    .duration(1000)
-    .attr("cx", function(d) {return x(d[prop1]);})
-    .attr("cy", function(d) {return y(d[prop2]);});
-
   svg.selectAll("circle")
     .data(data)
     .enter().append("circle")
         .attr("r", 3)
-        .attr("cx", function(d) { return x(d[prop1]); })
-        .attr("cy", function(d) { return y(d[prop2]); })
+        .attr("cx", 0)
+        .attr("cy", height)
         .on("click", function(d) {
           console.log(d);
         });
 
-  svg.selectAll("circle")
-    .data(data).exit().remove();
+  d3.selectAll("circle")
+    .data(data)
+    .transition()
+    .duration(800)
+    .attr("cx", function(d) {return x(d[prop1]);})
+    .attr("cy", function(d) {return y(d[prop2]);});
+
+  d3.selectAll("circle")
+    .data(data)
+    .exit()
+    .transition()
+    .duration(600)
+    .attr("cx", 0)
+    .attr("cy", height).remove();
 
   d3.select(".x-axis")
     .transition()
@@ -261,4 +287,24 @@ export var updateDraw = function(d3, svg, x, y, preData, selectedGraph) {
     .transition()
     .duration(1000)
     .call(d3.axisLeft(y));
+};
+
+
+// Cluster Chart
+
+export var nodeCluster = function() {
+  
+  var width = 1200,
+      height = 550,
+      center = {x: width / 2, y: height / 2};
+
+  var survivalCenters = {
+    male: {x: width / 3, y: height / 2},
+    female: {x: 2 * width / 3,  y: height / 2}
+  };
+
+  var forceStrength = 0.03;
+
+ var svg = null;
+ var nodes = null;
 };

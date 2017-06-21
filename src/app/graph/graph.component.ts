@@ -39,10 +39,24 @@ export class GraphComponent implements OnInit {
       // Do d3 stuff
     }
 
+    // fetch("./data.json")
+    //   .then(response => response)
+    //   .then(data => {
+    //     this.passengers = data;
+    //   }).then(data => {
+    //     calc.sortByGender(data);
+    //   })
+    
+
+
+    
+
+
     this.passengerService.getPassengers().subscribe(data => {
       this.passengers = data;
-      calc.draw(d3, this.passengers);
+      // calc.sortByGender(this.passengers);
+      calc.drawScatter(d3, this.passengers);
     });
   }
 
-}
+};
