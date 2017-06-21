@@ -274,29 +274,40 @@ export var drawScatter = function(d3, preData) {
 
 
   //UPDATE GRAPH
-  d3.select("h6").on("click", function() {
-    d3.selectAll("circle").transition().duration(1000).attr("cy", function(d) {
-      if (d.survived === "0") {
-        return (height);
-      } else {
-        
-      }
-    });
-  });
 
   d3.select("h4").on("click", function() {
-    updateDrawScatter(d3, svg, x, y, height, preData, 2);
+    dance();
+    setTimeout(function() {
+      updateDrawScatter(d3, svg, x, y, height, preData, 2);
+    }, 400);
+    
   });    
 
   d3.select("h3").on("click", function() {
-    updateDrawScatter(d3, svg, x, y, height, preData, 1);
+    dance();
+    setTimeout(function() {
+    updateDrawScatter(d3, svg, x, y, height, preData, 1)
+    }, 400);
   });
 
   d3.select("h5").on("click", function() {
+    dance();
+    setTimeout(function() {
     updateDrawScatter(d3, svg, x, y, height, preData, 3);
+    }, 400);
   });
-};
 
+  
+
+  function dance() {
+    d3.selectAll("circle")
+      .transition()
+      .attr("cx", function() { return Math.random() * width;})
+      .attr("cy", function() { return Math.random() * height;})
+      .duration(400);
+  }
+
+};
 
 
 
@@ -344,34 +355,34 @@ export var updateDrawScatter = function(d3, svg, x, y, height, preData, selected
       .data(data)
       .exit()
       .transition()
-      .duration(600)
-      .attr("cx", 0)
-      .attr("cy", height).remove();
+      .duration(300)
+      .style("opacity", 0)
+      .remove();
 
 //AXIS
 
     if (type === "scatter") {
       d3.select(".x-axis")
         .transition()
-        .duration(400)
+        .duration(800)
         .style("opacity", 100)
         .call(d3.axisBottom(x));
 
       d3.select(".y-axis")
         .transition()
-        .duration(400)
+        .duration(800)
         .style("opacity", 100)
         .call(d3.axisLeft(y));
 
     } else if (type === "cluster") {
       d3.select(".x-axis")
         .transition()
-        .duration(600)
+        .duration(800)
         .style("opacity", 0);
 
         d3.select(".y-axis")
         .transition()
-        .duration(600)
+        .duration(800)
         .style("opacity", 0);
     }
 };
