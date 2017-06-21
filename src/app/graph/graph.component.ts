@@ -123,7 +123,6 @@ export class GraphComponent implements OnInit {
           return y(d.fare);
         }
       }).style("fill", "gray");
-
     });
 
 
