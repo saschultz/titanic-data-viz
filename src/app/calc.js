@@ -17,7 +17,7 @@ export var findAgeRange = function(titanicData) {
       ageRange.max = personAge;
     }
   }
-  console.log(ageRange);
+  // console.log(ageRange);
   return ageRange;
 };
 
@@ -38,18 +38,18 @@ export var breakdownAgeCount = function(titanicData) {
     }
 
   }
-  console.log(ages);
+  // console.log(ages);
   return ages;
 };
 
 
 //Input: {Age: age count}. Output: [{age: a specific age, count: the number of people of that age}]
 export var formatData = function(ageBreakdown) {
-  console.log(ageBreakdown);
+  // console.log(ageBreakdown);
   delete ageBreakdown[NaN];
 
   let formattedData = [];
-  
+
   for (let i in ageBreakdown) {
     if (!ageBreakdown.hasOwnProperty(i)) continue;
 
@@ -79,7 +79,7 @@ export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
   for (let i in ageBreakdown) {
     if (!ageBreakdown.hasOwnProperty(i)) {continue;}
 
-    console.log(ageBreakdown[i]);
+    // console.log(ageBreakdown[i]);
     agePercentages[i] = (ageBreakdown[i] * 100 / totalAgeCount);
 
   }
@@ -94,13 +94,13 @@ export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
 
   // console.log(agePercentages);
   // console.log(totalPercentage);
-  return agePercentages;    
+  return agePercentages;
 };
 
 
 //Input: min age in range, max age in range, {age: percentage of people of that age}. Output: percentage for that range (num).
 export var ageRangePercentage = function(min, max, agePercentages) {
-  let percentage = 0; 
+  let percentage = 0;
 
   for (let i in agePercentages) {
     if (!agePercentages.hasOwnProperty(i)) {continue;}
@@ -126,7 +126,6 @@ export var brain = function(titanicData) {
   let agePercentageRange = ageRangePercentage(20, 30, agePercentages);
 
   let ageBreakExclNaN = formatData(ageBreakdown);
-    
+
   return ageBreakExclNaN;
 };
-

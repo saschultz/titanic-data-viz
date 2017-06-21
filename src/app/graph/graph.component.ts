@@ -26,7 +26,7 @@ export class GraphComponent implements OnInit {
   }
 
   ngOnInit() {
-    let d3 = this.d3;
+    const d3 = this.d3;
     let d3ParentElement: Selection<any, any, any, any>;
 
     if (this.parentNativeElement !== null) {
@@ -43,7 +43,7 @@ export class GraphComponent implements OnInit {
     });
   }
 
-  draw = function(d3, data) {
+draw = function(d3, data) {
 
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 1300 - margin.left - margin.right,
@@ -61,60 +61,57 @@ export class GraphComponent implements OnInit {
   // append the svg object to the body of the page
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
-  var svg = d3.select("div.graph").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltip2")
+    .style("opacity", 0);
 
-  // Get the data
-  // d3.csv("titanic3.csv", function(error, data) {
-  //   if (error) throw error;
+  var svg = d3.select("body")
+      .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
 
-    console.log(data);
-
-    // format the data
-    data.forEach(function(d) {
-        d.age = +d.age; // formats whatever d.age is in d3.csv to number
-        d.fare = +d.fare;
-    });
+  // format the data
+  data.forEach(function(d) {
+      d.age = +d.age; // formats whatever d.age is in d3.csv to number
+      d.fare = +d.fare;
+  });
 
     // scale the range of the data
     // d3.extent([1, 4, 3, 2]) -> [1, 4]
     x.domain(d3.extent(data, function(d) { return d.age; })).nice();
     y.domain(d3.extent(data, function(d) { return d.fare; })).nice();
 
+
     // add the dots
     svg.selectAll("dot")
       .data(data)
-      .enter().append("circle")
-        .attr("r", function(d) {return (3 + 2*(+d.sibsp));})
-
-        .attr("cx", function(d) { return x(d.age); })
-        .attr("cy", function(d) { return y(d.fare); })
-//mouseover
-        .on("mouseover", function(d) {
-            d3.select(this).attr("r", d3.select(this).attr("r") * 1 + 10 )
-              d3.select('body')
-                .selectAll('#mouse-over')
-                .append('h2')
-                .text(d.name);
-          })
-
-//mouseout
+    .enter().append("circle")
+      .attr("r", function(d) {return (3 + 2*(+d.sibsp));})
+      .attr("cx", function(d) { return x(d.age); })
+      .attr("cy", function(d) { return y(d.fare); })
+      .on('mouseover', function(d){
+          div.transition()
+            .duration(200)
+            .style("opacity", .9);
+          div.html(d.name)
+          .style("left", (d3.event.pageX) + "px")
+          .style("top", (d3.event.pageY - 28) + "px");
+        })
         .on("mouseout", function(d) {
-          d3.select(this).attr("r", d3.select(this).attr("r") * 1 - 10 )
-            d3.select('body')
-              .selectAll('#mouse-over')
-              .append('h2')
-              .text("");
-            })
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        }
+      )
+      ;
+
+
+
 //click dot
-        .on("click", function(d){
-          d3.select(this).attr("cy", 0);
-          console.log(d);
-        });
+
     d3.select("h4").on("click", function(){
       d3.selectAll("circle").transition().duration(1000).attr("cy", function(d) {
         if (d.survived === "0") {
@@ -143,14 +140,6 @@ export class GraphComponent implements OnInit {
         dance();
         setInterval(dance, 4000);
       });
-
-
-
-
-
-
-
-
 
 
 

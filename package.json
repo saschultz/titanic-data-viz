@@ -21,11 +21,16 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "@angular/router": "^4.0.0",
+    "@types/d3-tip": "^3.5.4",
     "angularfire2": "^4.0.0-rc.0",
     "core-js": "^2.4.1",
     "d3-ng2-service": "^1.15.0",
+    "d3-tip": "^0.7.1",
+    "d3-tooltip": "0.0.1",
+    "d3tip": "^0.5.0",
     "firebase": "^4.1.2",
     "rxjs": "^5.1.0",
+    "types.d3": "^0.1.1",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
