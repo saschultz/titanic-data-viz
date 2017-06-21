@@ -26,3 +26,55 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+
+# _Titanic Vis_
+
+#### _This app demonstrates simple d3 javascript data visualizations using graphical visualizations of information with 2.5D presentations, Wednesday, June 20, 2017_
+
+#### By _**N.Long, J.Higgins, N. Powell, S. Shultz**_
+
+## Description
+
+_This web app provides a user driven graphical representation of data about passengers who were on the sunken Titanic vessel, sunk in 1912._
+
+
+## Setup/Installation Requirements
+
+### Access Atom Files
+
+* _Open terminal_
+* _Once in terminal enter the following commands to clone the file to your desktop and open the repository:_
+```
+$ cd desktop
+$ git clone https://github.com/n-powell/titanic-data-viz
+$ cd desktop/titanic-data-viz
+$ npm install
+$ npm install d3-ng2-service --save
+$ atom .
+$ ng serve
+$ open https://localhost:4200
+```
+## Known Bugs
+
+_No known bugs._
+
+## Support and contact details
+
+_Please contact placeholder:-> google.SellsMyData@gmail.biz_
+
+## Technologies Used
+
+* HTML
+* CSS
+* D3 library
+* JavaScrip
+* Angular 4
+* TypeScript
+* Node package manager
+
+### License
+
+*This software is licensed under MIT license.*
+
+Copyright (c) 2017 **_S. Shultz, N.Long, J.Higgins, N. Powell_**
