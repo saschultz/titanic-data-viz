@@ -451,12 +451,16 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
         .duration(800)
         .style("opacity", 100)
         .call(d3.axisBottom(x));
+      xLabel
+        .style("opacity", 1);
 
       d3.select(".y-axis")
         .transition()
         .duration(800)
         .style("opacity", 100)
         .call(d3.axisLeft(y));
+      yLabel
+        .style("opacity", 1);
 
     } else if (type === "cluster") {
       d3.select(".x-axis")
@@ -464,22 +468,22 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
         .duration(800)
         .style("opacity", 1e-6);
       xLabel
-        .text(' ');
+        // .text(' ');
 
-          // .transition()
-          // .duration(100)
-          // .style("opacity", 1e-6);
+          .transition()
+          .style("opacity", .2e-6)
+          .duration(800);
 
         d3.select(".y-axis")
           .transition()
           .duration(800)
           .style("opacity", 1e-6);
         yLabel
-          .text(' ');
+          // .text(' ');
 
-          // .transition()
-          // .style("opacity", 1e-6)
-          // .duration(100);
+          .transition()
+          .style("opacity", .2e-6)
+          .duration(800);
 
     }
 };
