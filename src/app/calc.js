@@ -278,7 +278,7 @@ export var drawScatter = function(d3, preData) {
         d3.select(this).attr("r", 5).style("fill", "black")
         // select("circle")
         div.style("opacity", .9);
-        div.html(d.age + "<small>" + " people of the age " + "</small>" + d.count)
+        div.html(d.count + "<small>" + " people of the age " + "</small>" + d.age)
 
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
