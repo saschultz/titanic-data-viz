@@ -1,34 +1,4 @@
-# TitanicDataViz
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.2.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
-
-
-# _Titanic Vis_
+# _Titanic Data Visualization
 
 #### _This app demonstrates simple d3 javascript data visualizations using graphical visualizations of information with 2.5D presentations, Wednesday, June 20, 2017_
 
@@ -36,7 +6,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Description
 
-_This web app provides a user driven graphical representation of data about passengers who were on the sunken Titanic vessel, sunk in 1912._
+_This web app provides a user driven graphical representation of data about passengers who were on the sunken Titanic vessel, sunk in 1912. The data represents 1,311 passengers of the 3,335 total passengers and crew onboard._
 
 ## Data Source
 
@@ -72,6 +42,21 @@ write:
 $ ng serve
 $ open https://localhost:4200
 ```
+
+# Specifications
+
+| Behavior | Input | Output |
+|----------|:-----:|:------:|
+| The application can display raw data | - | age: 22 |
+| The application can display manipulated data | - | age: 22 count: 6 |
+| | | |
+
+# User Stories
+* The site will allow the user to see a graph displaying the amount of passengers for each age
+* The site will allow the user to see a graph displaying the amount of passengers for each gender
+* The site will allow the user to see a graph displaying the ticket fare each passenger paid verses their age
+* The site will allow the user to see how many people survived on the graphs displaying passengers by gender and ticket fare by age
+
 ## Known Bugs
 
 _No known bugs._
@@ -84,11 +69,12 @@ _Please contact placeholder:-> google.SellsMyData@gmail.biz_
 
 * HTML
 * CSS
-* D3 library
-* JavaScrip
+* D3 library v4
+* JavaScript
 * Angular 4
 * TypeScript
 * Node package manager
+* Firebase
 
 ### License
 
