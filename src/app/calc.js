@@ -245,7 +245,7 @@ export var drawScatter = function(d3, preData) {
             "translate(" + margin.left + "," + margin.top + ")");
 
   var div = d3.select("body").append("div")
-    .attr("class", "tooltip2")
+    .attr("class", "tooltipCountAge")
     .style("opacity", 0);
   // Get the data
   // d3.csv("titanic3.csv", function(error, data) {
@@ -384,11 +384,11 @@ export var drawScatter = function(d3, preData) {
   });
 };
 
-
+//draw cluster
 export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
 
   var div = d3.select("body").append("div")
-    .attr("class", "tooltipCF")
+    .attr("class", "tooltipCluster")
     .style("opacity", 0);
 
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
@@ -413,6 +413,7 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
     console.log("wut?");
   }
 
+//Cluster graph dot creation
   svg.selectAll("circle")
     .data(data)
     .enter().append("circle")
