@@ -2,7 +2,7 @@
 
 #### _This app demonstrates simple d3 javascript data visualizations using graphical visualizations of information with 2.5D presentations, Wednesday, June 20, 2017_
 
-#### By _**Niklas Long, James Higgins, Nick Powell, Sarah. Schultz**_
+#### By _**Niklas Long, James Higgins, Nick Powell, Sara Schultz**_
 
 ## Description
 
@@ -23,7 +23,6 @@ $ cd desktop
 $ git clone https://github.com/n-powell/titanic-data-viz
 $ cd desktop/titanic-data-viz
 $ npm install
-$ npm install d3-ng2-service --save
 $ atom .
 $ touch src/app/api-keys.ts
 ```
@@ -82,4 +81,4 @@ _Please comment on Github with any questions_
 
 *This software is licensed under MIT license.*
 
-Copyright (c) 2017 **Niklas Long, James Higgins, Nick Powell, Sarah. Schultz**
+Copyright (c) 2017 **Niklas Long, James Higgins, Nick Powell, Sara Schultz**
