@@ -10,7 +10,7 @@ _This web app provides a user driven graphical representation of data about pass
 
 ## Data Source
 
-_Download Titanic passenger dataset: biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3.xls_
+_Download Titanic passenger dataset: http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3.xls_
 
 ## Setup/Installation Requirements
 
