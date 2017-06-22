@@ -377,6 +377,10 @@ export var drawScatter = function(d3, preData) {
 
 export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
 
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltip2")
+    .style("opacity", 0);
+    
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
   let data = dataArray[0],
@@ -407,9 +411,21 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .attr("cx", function() {return Math.random() * 6000;})
       .attr("cy", height)
       .style("opacity", 0)
-        .on("click", function(d) {
-          console.log(d);
-        });
+      .on('mouseover', function(d){
+        div.transition()
+          .duration(200)
+          .style("opacity", .9);
+        div.html(d.name)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(d) {
+        div.transition()
+          .duration(500)
+          .style("opacity", 0);})
+      .on("click", function(d) {
+        console.log(d);
+      });
 
     d3.selectAll("circle")
       .data(data)
