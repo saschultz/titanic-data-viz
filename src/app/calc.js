@@ -165,10 +165,10 @@ export var assignXY = function(genderArray) {
         female[i+j].x = currentFX;
         female[i+j].y = currentFY;
       }
-      currentFX += 2;
+      currentFX += 1;
     }
     currentFX = 45;
-    currentFY += 3;
+    currentFY += 2;
   }
 
   let maleFemale = male.concat(female);
@@ -273,22 +273,21 @@ export var drawScatter = function(d3, preData) {
       .attr("r", 2.5)
       .attr("cx", function(d) { return x(d[prop1]); })
       .attr("cy", function(d) { return y(d[prop2]); })
-      // .on('mouseover', function(d) {
-      //   .attr("r", 2.5)
-      // })
       .on('mouseover', function(d){
-        d3.select(this).transition().duration(100).attr("r", 5)
+        d3.selectAll("circle").style("fill", "black").transition().duration(1000)
+        d3.select(this).transition().duration(300).attr("r", 5).style("fill", "black")
         // select("circle")
         div.transition()
           .duration(200)
           .style("opacity", .9);
-        div.html(d.age)
+        div.html(d.age + "<small>" + " people of the age " + "</small>" + d.count)
 
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
       })
       .on("mouseout", function(d) {
-        d3.select(this).transition().duration(100).attr("r", 2.5)
+        d3.selectAll("circle").transition().duration(500).style("fill", "black")
+        d3.select(this).transition().duration(500).attr("r", 2.5)
         div.transition()
           .duration(500)
           .style("opacity", 0);})
@@ -430,7 +429,7 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
         div.transition()
           .duration(200)
           .style("opacity", .9);
-        div.html(d.name)
+        div.html(d.name + "<small>" + " age " + "</small>" + d.age)
         .style("left", (d3.event.pageX + 30) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
 
