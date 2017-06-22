@@ -32,12 +32,15 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 #### _This app demonstrates simple d3 javascript data visualizations using graphical visualizations of information with 2.5D presentations, Wednesday, June 20, 2017_
 
-#### By _**N.Long, J.Higgins, N. Powell, S. Shultz**_
+#### By _**N.Long, J.Higgins, N. Powell, S. Schultz**_
 
 ## Description
 
 _This web app provides a user driven graphical representation of data about passengers who were on the sunken Titanic vessel, sunk in 1912._
 
+## Data Source
+
+_Download Titanic passenger dataset: biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3.xls_
 
 ## Setup/Installation Requirements
 
@@ -52,6 +55,20 @@ $ cd desktop/titanic-data-viz
 $ npm install
 $ npm install d3-ng2-service --save
 $ atom .
+$ touch src/app/api-keys.ts
+```
+write:
+```
+ export var masterFirebaseConfig = {
+   apiKey: "Your API info",
+   authDomain: "Your API info",
+   databaseURL: "Your API info",
+   projectId: "Your API info",
+   storageBucket: "Your API info",
+   messagingSenderId: "Your API info"
+ };
+ ```
+ ```
 $ ng serve
 $ open https://localhost:4200
 ```
@@ -77,4 +94,4 @@ _Please contact placeholder:-> google.SellsMyData@gmail.biz_
 
 *This software is licensed under MIT license.*
 
-Copyright (c) 2017 **_S. Shultz, N.Long, J.Higgins, N. Powell_**
+Copyright (c) 2017 **_S. Schultz, N.Long, J.Higgins, N. Powell_**
