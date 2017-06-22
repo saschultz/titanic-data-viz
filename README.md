@@ -6,7 +6,7 @@
 
 ## Description
 
-_This web app provides a user driven graphical representation of data about passengers who were on the sunken Titanic vessel, sunk in 1912. The data represents 1,311 passengers of the 3,335 total passengers and crew onboard._
+_This web app provides a user driven graphical representation of data about passengers who were on the sunken Titanic vessel, sunk in 1912. The data represents 1,310 passengers of the 3,335 total passengers and crew onboard._
 
 ## Data Source
 
