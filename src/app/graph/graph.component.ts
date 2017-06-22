@@ -19,6 +19,7 @@ export class GraphComponent implements OnInit {
 
   passengers;
   processedData;
+  selectedGraph: "countAge";
 
   private d3: D3;
   private parentNativeElement: any;
@@ -37,26 +38,18 @@ export class GraphComponent implements OnInit {
       d3ParentElement = d3.select(this.parentNativeElement);
 
       // Do d3 stuff
-    }
-
-    // fetch("./data.json")
-    //   .then(response => response)
-    //   .then(data => {
-    //     this.passengers = data;
-    //   }).then(data => {
-    //     calc.sortByGender(data);
-    //   })
+    }    
     
-
-
-    
-
 
     this.passengerService.getPassengers().subscribe(data => {
       this.passengers = data;
-      // calc.sortByGender(this.passengers);
       calc.drawScatter(d3, this.passengers);
     });
+  }
+
+  selectGraph(selectedGraph) {
+    this.selectedGraph = selectedGraph;
+    console.log(selectedGraph)
   }
 
 };

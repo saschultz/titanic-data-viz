@@ -58,6 +58,16 @@ export var formatData = function(ageBreakdown) {
   return formattedData;
 };
 
+export var deleteNAN = function(data) {
+  for (let i in data) {
+    if ( isNaN(parseInt(data[i].age)) === true) {
+      delete data[i];
+    }
+  }
+  console.log(data);
+  return data;
+};
+
 
 //Input: {Age: age count}. Output: all the number of ages added up – i.e. 1310 because there are that many passengers on board.
 export var countTotalAgesNum = function(ageCount) { //counts number of ages
@@ -175,19 +185,18 @@ export var brain = function(titanicData, selectedGraph) {
    // findAgeRange();
   let ageBreakdown = breakdownAgeCount(titanicData);
   let totalAgeCount = countTotalAgesNum(ageBreakdown);
-
   let agePercentages = ageByPercentage(ageBreakdown, totalAgeCount);
   let agePercentageRange = ageRangePercentage(20, 30, agePercentages);
-
   let ageBreakExclNaN = formatData(ageBreakdown);
 
-  let genderArray = sortByGender(titanicData);
+  let rawWithoutNaN = deleteNAN(titanicData);
 
+  let genderArray = sortByGender(titanicData);
   let maleFemale = (assignXY(genderArray));
 
   // Select a graph to display – return values
 
-  if (selectedGraph === 1) { return [titanicData, "age", "fare", "scatter"]; }
+  if (selectedGraph === 1) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
   if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
   if (selectedGraph === 3) { return [maleFemale, "x", "y", "cluster"]; }
 
@@ -272,33 +281,10 @@ export var drawScatter = function(d3, preData) {
       .attr("class", "y-axis")
       .call(d3.axisLeft(y));
 
+  // add stat div
+
 
   //UPDATE GRAPH
-
-  d3.select("h4").on("click", function() {
-    dance();
-    setTimeout(function() {
-      updateDrawScatter(d3, svg, x, y, height, width, preData, 2);
-    }, 400);
-    
-  });    
-
-  d3.select("h3").on("click", function() {
-    dance();
-    setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, width, preData, 1);
-    }, 400);
-  });
-
-  d3.select("h5").on("click", function() {
-    dance();
-    setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, width, preData, 3);
-    }, 400);
-  });
-
-  
-
   function dance() {
     d3.selectAll("circle")
       .transition()
@@ -307,9 +293,70 @@ export var drawScatter = function(d3, preData) {
       .duration(400);
   }
 
+  d3.select("#count-age").on("click", function() {
+    dance();
+    setTimeout(function() {
+      updateDrawScatter(d3, svg, x, y, height, width, preData, 2);
+    }, 400);
+    
+  });    
+
+  d3.select("#fare-age").on("click", function() {
+    dance();
+    setTimeout(function() {
+    updateDrawScatter(d3, svg, x, y, height, width, preData, 1);
+    }, 400);
+  });
+
+  d3.select("#gender").on("click", function() {
+    dance();
+    setTimeout(function() {
+    updateDrawScatter(d3, svg, x, y, height, width, preData, 3);
+    }, 400);
+  });
+
+  //Drop Deceased
+
+  d3.select("#kill-fare-age").on("click", function() {
+    d3.selectAll("circle")
+      .transition()
+      .duration(700)
+      .style("opacity", function(d) {
+        if (d.survived === "0") {
+          return 1e-6;
+        } else {
+          return 100;
+        }
+      })
+      .attr("cy", function(d) {
+        if (d.survived === "0") {
+          return height;
+        } else {
+          return y(d.fare);
+        }
+      });
+  });
+
+   d3.select("#kill-gender").on("click", function(d) {
+    d3.selectAll("circle")
+      .transition()
+      .duration(800)
+      .style("opacity", function(d) {
+        if (d.survived === "0") {
+          return 1e-6;
+        } else {
+          return 100;
+        }
+      })
+      .attr("cy", function(d) {
+        if (d.survived === "0") {
+          return height;
+        } else {
+          return y(d.y);
+        }
+      });
+  });
 };
-
-
 
 
 export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
@@ -327,11 +374,14 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
   });
 
  if (type === "scatter") {
+   console.log(typeof data)
     x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
     y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
   } else if (type === "cluster") {
     x.domain([0, 100]);
     y.domain([0, 100]);
+  } else {
+    console.log("wut?");
   }
 
   svg.selectAll("circle")
@@ -361,51 +411,33 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .attr("cx", function(d) {return x(d[prop1]);})
       .attr("cy", function(d) {return y(d[prop2]);});
 
-
 //AXIS
 
     if (type === "scatter") {
       d3.select(".x-axis")
         .transition()
-        .duration(1000)
+        .duration(800)
         .style("opacity", 100)
         .call(d3.axisBottom(x));
 
       d3.select(".y-axis")
         .transition()
-        .duration(1000)
+        .duration(800)
         .style("opacity", 100)
         .call(d3.axisLeft(y));
 
     } else if (type === "cluster") {
       d3.select(".x-axis")
         .transition()
-        .duration(1000)
-        .style("opacity", 0);
+        .duration(800)
+        .style("opacity", 1e-6);
 
         d3.select(".y-axis")
         .transition()
-        .duration(1000)
-        .style("opacity", 0);
+        .duration(800)
+        .style("opacity", 1e-6);
     }
 };
 
 
 // Cluster Chart
-
-export var nodeCluster = function() {
-  
-  var width = 1200,
-      height = 550,
-      center = {x: width / 2, y: height / 2};
-
-  var survivalCenters = {
-    male: {x: width / 3, y: height / 2},
-    female: {x: 2 * width / 3,  y: height / 2}
-  };
-
-  var forceStrength = 0.03;
-
- var svg = null;
- var nodes = null;
-};
