@@ -281,7 +281,7 @@ export var drawScatter = function(d3, preData) {
  var xLabel = svg.append("text")
      .attr("transform",
            "translate(" + (width/2) + " ," +
-                          (height + margin.top + 7) + ")")
+                          (height + margin.top + 6.5) + ")")
      .style("text-anchor", "middle")
      .text(prop1);
   console.log(xLabel);
@@ -305,9 +305,8 @@ export var drawScatter = function(d3, preData) {
         .attr("x", (width / 2))
         .attr("y", 0 - (height / 100))
         .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .style("text-decoration", "underline")
-        .text("Number of Passengers per Age Group");
+        .style("font-size", "20px")
+        .text("Number of Passengers per Age");
 
 
   //UPDATE GRAPH
