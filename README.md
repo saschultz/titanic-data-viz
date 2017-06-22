@@ -1,8 +1,8 @@
-# _Titanic Data Visualization
+# _Titanic Data Visualization_
 
 #### _This app demonstrates simple d3 javascript data visualizations using graphical visualizations of information with 2.5D presentations, Wednesday, June 20, 2017_
 
-#### By _**N.Long, J.Higgins, N. Powell, S. Schultz**_
+#### By _**Niklas Long, James Higgins, Nick Powell, Sarah. Schultz**_
 
 ## Description
 
@@ -65,7 +65,7 @@ _No known bugs._
 
 ## Support and contact details
 
-_Please contact placeholder:-> google.SellsMyData@gmail.biz_
+_Please comment on Github with any questions_
 
 ## Technologies Used
 
@@ -82,4 +82,4 @@ _Please contact placeholder:-> google.SellsMyData@gmail.biz_
 
 *This software is licensed under MIT license.*
 
-Copyright (c) 2017 **_S. Schultz, N.Long, J.Higgins, N. Powell_**
+Copyright (c) 2017 **Niklas Long, James Higgins, Nick Powell, Sarah. Schultz**
