@@ -395,7 +395,6 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
     console.log("wut?");
   }
 
-  console.log(xLabel);
   function updateXLabel() {
     xLabel
       .text(prop1)
@@ -456,10 +455,23 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
         .transition()
         .duration(800)
         .style("opacity", 1e-6);
+      xLabel
+        .text(' ');
+        
+          // .transition()
+          // .duration(100)
+          // .style("opacity", 1e-6);
 
         d3.select(".y-axis")
-        .transition()
-        .duration(800)
-        .style("opacity", 1e-6);
+          .transition()
+          .duration(800)
+          .style("opacity", 1e-6);
+        yLabel
+          .text(' ');
+
+          // .transition()
+          // .style("opacity", 1e-6)
+          // .duration(100);
+
     }
 };
