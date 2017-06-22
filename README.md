@@ -82,3 +82,6 @@ _Please comment on Github with any questions_
 *This software is licensed under MIT license.*
 
 Copyright (c) 2017 **Niklas Long, James Higgins, Nick Powell, Sara Schultz**
+
+![Cluster](src/assets/cluster.png)
+![homepage logged in](src/assets/fare.png)
