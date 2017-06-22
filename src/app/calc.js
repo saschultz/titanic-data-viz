@@ -165,10 +165,10 @@ export var assignXY = function(genderArray) {
         female[i+j].x = currentFX;
         female[i+j].y = currentFY;
       }
-      currentFX += 1;
+      currentFX += 2;
     }
     currentFX = 45;
-    currentFY += 2;
+    currentFY += 3;
   }
 
   let maleFemale = male.concat(female);
@@ -267,14 +267,14 @@ export var drawScatter = function(d3, preData) {
   svg.selectAll("dot")
     .data(data)
     .enter().append("circle")
-      .attr("r", 5)
+      .attr("r", 2.5)
       .attr("cx", function(d) { return x(d[prop1]); })
       .attr("cy", function(d) { return y(d[prop2]); })
       // .on('mouseover', function(d) {
       //   .attr("r", 2.5)
       // })
       .on('mouseover', function(d){
-        d3.select(this).transition().duration(100).attr("r", 10)
+        d3.select(this).transition().duration(100).attr("r", 5)
         // select("circle")
         div.transition()
           .duration(200)
@@ -285,7 +285,7 @@ export var drawScatter = function(d3, preData) {
         .style("top", (d3.event.pageY - 28) + "px");
       })
       .on("mouseout", function(d) {
-        d3.select(this).transition().duration(100).attr("r", 5)
+        d3.select(this).transition().duration(100).attr("r", 2.5)
         div.transition()
           .duration(500)
           .style("opacity", 0);})
@@ -385,7 +385,7 @@ export var drawScatter = function(d3, preData) {
 export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
 
   var div = d3.select("body").append("div")
-    .attr("class", "tooltip2")
+    .attr("class", "tooltipCF")
     .style("opacity", 0);
 
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
@@ -419,17 +419,28 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .attr("cy", height)
       .style("opacity", 0)
       .on('mouseover', function(d){
+// hover over dot
+        d3.selectAll("circle").style("fill", "white").transition().duration(1000)
+        d3.select(this).transition().duration(300).attr("r", 5).style("fill", "black")
+
+//tool tip CF
         div.transition()
           .duration(200)
           .style("opacity", .9);
         div.html(d.name)
-        .style("left", (d3.event.pageX) + "px")
+        .style("left", (d3.event.pageX + 30) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
+
       })
       .on("mouseout", function(d) {
+        d3.selectAll("circle").transition().duration(500).style("fill", "black")
+        d3.select(this).transition().duration(500).attr("r", 2.5)
+
+
         div.transition()
           .duration(500)
           .style("opacity", 0);})
+
       .on("click", function(d) {
         console.log(d);
       });
