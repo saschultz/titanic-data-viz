@@ -60,11 +60,12 @@ export var formatData = function(ageBreakdown) {
 
 export var deleteNAN = function(data) {
   for (let i in data) {
+    if (!data.hasOwnProperty(i)) {continue;}
     if ( isNaN(parseInt(data[i].age)) === true) {
       delete data[i];
     }
   }
-  // console.log(data);
+  console.log(data);
   return data;
 };
 
@@ -182,27 +183,31 @@ export var assignXY = function(genderArray) {
 //BRAIN ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 export var brain = function(rawData, selectedGraph) {
-  let titanicData = rawData.slice(0); //–––Really important (sortByGender and assignXY modify titanicData)
+
+  let ageFareData = rawData.slice(0);
+  let ageCountData = rawData.slice(0);
+  let genderData = rawData.slice(0); // Really important (sortByGender and assignXY modify titanicData)
+   
+
    // findAgeRange();
-  let ageBreakdown = breakdownAgeCount(titanicData);
-  let totalAgeCount = countTotalAgesNum(ageBreakdown);
-  let agePercentages = ageByPercentage(ageBreakdown, totalAgeCount);
-  let agePercentageRange = ageRangePercentage(20, 30, agePercentages);
+  let ageBreakdown = breakdownAgeCount(ageCountData);
+
+  // let totalAgeCount = countTotalAgesNum(ageBreakdown);
+  // let agePercentages = ageByPercentage(ageBreakdown, totalAgeCount);
+  // let agePercentageRange = ageRangePercentage(20, 30, agePercentages);
+
   let ageBreakExclNaN = formatData(ageBreakdown);
 
-  let rawWithoutNaN = deleteNAN(titanicData);
+  // let rawWithoutNaN = deleteNAN(ageFareData); still broken...
 
-  let genderArray = sortByGender(titanicData);
+  let genderArray = sortByGender(genderData);
   let maleFemale = (assignXY(genderArray));
 
-  // console.log(titanicData);
 
-  // Select a graph to display – return values
-
+  // Select a graph to display and return it to drawScatter
   if (selectedGraph === 1) { return [rawData, "age", "fare", "scatter"]; }
   if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
   if (selectedGraph === 3) { return [maleFemale, "x", "y", "cluster"]; }
-
 };
 
 
@@ -217,13 +222,14 @@ export var drawScatter = function(d3, preData) {
       prop1 = dataArray[1],
       prop2 = dataArray[2];
 
-  var margin = {top: 20, right: 20, bottom: 30, left: 50},
+  let margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 1200 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom;
 
 
-  // set the ranges
-
+  // set the ranges for x and y
+  let x = d3.scaleLinear().range([0, width]);
+  let y = d3.scaleLinear().range([height, 0]);
 
 
   var x = d3.scaleLinear().range([0, width]);
@@ -233,23 +239,27 @@ export var drawScatter = function(d3, preData) {
   // append the svg object to the body of the page
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
-  var svg = d3.select("div.graph").append("svg")
+  var svg = d3.select("body").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
+
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltipCountAge")
+    .style("opacity", 0);
   // Get the data
   // d3.csv("titanic3.csv", function(error, data) {
   //   if (error) throw error;
 
 
-    // format the data
 
+  // format the data
   data.forEach(function(d) {
-      d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
-      d[prop2] = +d[prop2];
+    d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
+    d[prop2] = +d[prop2];
   });
 
 
@@ -267,24 +277,43 @@ export var drawScatter = function(d3, preData) {
       .attr("r", 2.5)
       .attr("cx", function(d) { return x(d[prop1]); })
       .attr("cy", function(d) { return y(d[prop2]); })
+      .on('mouseover', function(d){
+        d3.selectAll("circle").style("fill", "black").transition().duration(1000)
+        d3.select(this).transition().duration(300).attr("r", 5).style("fill", "black")
+        // select("circle")
+        div.transition()
+          .duration(200)
+          .style("opacity", .9);
+        div.html(d.age + "<small>" + " people of the age " + "</small>" + d.count)
+
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(d) {
+        d3.selectAll("circle").transition().duration(500).style("fill", "black")
+        d3.select(this).transition().duration(500).attr("r", 2.5)
+        div.transition()
+          .duration(500)
+          .style("opacity", 0);})
       .on("click", function(d) {
         console.log(d);
       });
 
+  
   // add the X Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .attr("class", "x-axis")
       .call(d3.axisBottom(x));
 
-  // label the X Axis for graph on default load
+ // label the X Axis for graph on default load
  var xLabel = svg.append("text")
      .attr("transform",
            "translate(" + (width/2) + " ," +
                           (height + margin.top + 6.5) + ")")
      .style("text-anchor", "middle")
      .text(prop1);
-  console.log(xLabel);
+
 
   // add the Y Axis
   svg.append("g")
@@ -313,18 +342,19 @@ export var drawScatter = function(d3, preData) {
   function dance() {
     d3.selectAll("circle")
       .transition()
-      .attr("cx", function() { return Math.random() * width ;})
+      .attr("cx", function() { return Math.random() * width ;}) //specify range
       .attr("cy", height)
       .duration(400);
   }
+
 
   d3.select("#count-age").on("click", function() {
     dance();
     setTimeout(function() {
       updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 2, title);
     }, 400);
-
   });
+
 
   d3.select("#fare-age").on("click", function() {
     dance();
@@ -363,29 +393,34 @@ export var drawScatter = function(d3, preData) {
       });
   });
 
-   d3.select("#kill-gender").on("click", function(d) {
-    d3.selectAll("circle")
-      .transition()
-      .duration(800)
-      .style("opacity", function(d) {
-        if (d.survived === "0") {
-          return 1e-6;
-        } else {
-          return 100;
-        }
-      })
-      .attr("cy", function(d) {
-        if (d.survived === "0") {
-          return height;
-        } else {
-          return y(d.y);
-        }
-      });
+
+  d3.select("#kill-gender").on("click", function(d) {
+  d3.selectAll("circle")
+    .transition()
+    .duration(800)
+    .style("opacity", function(d) {
+      if (d.survived === "0") {
+        return 1e-6;
+      } else {
+        return 100;
+      }
+    })
+    .attr("cy", function(d) {
+      if (d.survived === "0") {
+        return Math.random() * 250000;
+      } else {
+        return y(d.y);
+      }
+    });
   });
 }; // END drawScatter FUNCTION
 
 export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph, title) {
-  console.log(title);
+
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltipCluster")
+    .style("opacity", 0);
+
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
   let data = dataArray[0],
@@ -394,9 +429,12 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
       type = dataArray[3];
 
   data.forEach(function(d) {
+    if (+d[prop1] !== 0) { // excludes undefined ages - It's a very bad fix to the problem!!!
       d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
       d[prop2] = +d[prop2];
+    }
   });
+
 
  if (type === "scatter") {
     x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
@@ -443,9 +481,28 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
       .attr("cx", function() {return Math.random() * 6000;})
       .attr("cy", height)
       .style("opacity", 0)
-        .on("click", function(d) {
-          console.log(d);
-        });
+      .on('mouseover', function(d){
+        d3.selectAll("circle").style("fill", "white").transition().duration(1000)
+        d3.select(this).transition().duration(300).attr("r", 5).style("fill", "black")
+        div.transition()
+          .duration(200)
+          .style("opacity", .9);
+        div.html(d.name + "<small>" + " age " + "</small>" + d.age)
+        .style("left", (d3.event.pageX + 30) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+
+      })
+      .on("mouseout", function(d) {
+        d3.selectAll("circle").transition().duration(500).style("fill", "black")
+        d3.select(this).transition().duration(500).attr("r", 2.5)
+        div.transition()
+          .duration(500)
+          .style("opacity", 0);
+       })
+      .on("click", function(d) {
+        console.log(d);
+      });
+
 
 
     d3.selectAll("circle")
@@ -464,7 +521,8 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
       .attr("cx", function(d) {return x(d[prop1]);})
       .attr("cy", function(d) {return y(d[prop2]);});
 
-//AXIS
+
+    //AXIS
 
     if (type === "scatter") {
       d3.select(".x-axis")
@@ -504,3 +562,4 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
 
     }
 }; // END updateDrawScatter FUNCTION
+
