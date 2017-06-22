@@ -349,14 +349,14 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .data(data)
       .exit()
       .transition()
-      .duration(1000)
-      .attr("cy", function() {return Math.random() * -40000;})
+      .duration(900)
+      .attr("cy", function() {return Math.random() * -60000;})
       .remove();
     
     d3.selectAll("circle")
       .data(data)
       .transition()
-      .duration(900)
+      .duration(700)
       .style("opacity", 100)
       .attr("cx", function(d) {return x(d[prop1]);})
       .attr("cy", function(d) {return y(d[prop2]);});
