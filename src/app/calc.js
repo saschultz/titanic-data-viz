@@ -448,13 +448,16 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
  if (type === "scatter") {
     x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
     y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
+    d3.select(".male").text(" ")
+    d3.select(".female").text(" ")
+
   } else if (type === "cluster") {
     x.domain([0, 100]);
     y.domain([0, 100]);
 
     // labels for gender cluster
     var maleLabel = svg.append("text")
-          .attr("x", (margin.top + 200))
+          .attr("x", (margin.top + 400))
           .attr("y", (margin.bottom))
           .attr("text-anchor", "middle")
           .attr("class", "male")
@@ -462,8 +465,8 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
           .text("Male");
 
     var femaleLabel = svg.append("text")
-          .attr("x", (margin.top + 568))
-          .attr("y", (margin.bottom + 200))
+          .attr("x", (margin.top + 1100))
+          .attr("y", (margin.bottom + 350))
           .attr("text-anchor", "right")
           .attr("class", "female")
           .style("font-size", "20px")
