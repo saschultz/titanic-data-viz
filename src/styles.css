@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-/*div for count age*/
+body {
+  background-color: #f5ebdc;
+  }/*div for count age*/
 div.tooltipCountAge {
     position: absolute;
     text-align: left;
@@ -21,7 +23,7 @@ div.tooltipCluster {
     height: 80px;
     padding: 2px;
     font: 22px sans-serif;
-    background: white;
+    /*background: white;*/
     /*background: grey;*/
     /*color: white;*/
     border: 0px;

@@ -187,7 +187,7 @@ export var brain = function(rawData, selectedGraph) {
   let ageFareData = rawData.slice(0);
   let ageCountData = rawData.slice(0);
   let genderData = rawData.slice(0); // Really important (sortByGender and assignXY modify titanicData)
-   
+
 
    // findAgeRange();
   let ageBreakdown = breakdownAgeCount(ageCountData);
@@ -222,9 +222,9 @@ export var drawScatter = function(d3, preData) {
       prop1 = dataArray[1],
       prop2 = dataArray[2];
 
-  let margin = {top: 20, right: 20, bottom: 30, left: 50},
-      width = 1200 - margin.left - margin.right,
-      height = 600 - margin.top - margin.bottom;
+  let margin = {top: 20, right: 20, bottom: 60, left: 60},
+      width = 2200 - margin.left - margin.right,
+      height = 1000 - margin.top - margin.bottom;
 
 
   // set the ranges for x and y
@@ -270,11 +270,11 @@ export var drawScatter = function(d3, preData) {
   svg.selectAll("dot")
     .data(data)
     .enter().append("circle")
-      .attr("r", 2.5)
+      .attr("r", 3)
       .attr("cx", function(d) { return x(d[prop1]); })
       .attr("cy", function(d) { return y(d[prop2]); })
       .on('mouseover', function(d){
-        d3.selectAll("circle").style("fill", "black")
+        d3.selectAll("circle").style("fill", "white")
         d3.select(this).attr("r", 5).style("fill", "black")
         // select("circle")
         div.style("opacity", .9);
@@ -285,13 +285,13 @@ export var drawScatter = function(d3, preData) {
       })
       .on("mouseout", function(d) {
         d3.selectAll("circle").style("fill", "black")
-        d3.select(this).attr("r", 2.5)
+        d3.select(this).attr("r", 3)
         div.style("opacity", 0);})
       .on("click", function(d) {
         console.log(d);
       });
 
-  
+
   // add the X Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -302,7 +302,7 @@ export var drawScatter = function(d3, preData) {
  var xLabel = svg.append("text")
      .attr("transform",
            "translate(" + (width/2) + " ," +
-                          (height + margin.top + 6.5) + ")")
+                          (height + margin.top + 20) + ")")
      .style("text-anchor", "middle")
      .text(prop1);
 
@@ -324,7 +324,7 @@ export var drawScatter = function(d3, preData) {
   // title for graph on default load
   var title = svg.append("text")
         .attr("x", (width / 2))
-        .attr("y", 0 - (height / 100))
+        .attr("y", 0 - (height / 200))
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
         .text("Total Passengers by Age");
@@ -469,7 +469,7 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
   svg.selectAll("circle")
     .data(data)
     .enter().append("circle")
-      .attr("r", 2.5)
+      .attr("r", 3)
       .attr("cx", function() {return Math.random() * 6000;})
       .attr("cy", height)
       .style("opacity", 0)
@@ -486,7 +486,7 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
       })
       .on("mouseout", function(d) {
         d3.selectAll("circle").style("fill", "black")
-        d3.select(this).attr("r", 2.5)
+        d3.select(this).attr("r", 3)
         div.style("opacity", 0);
        })
       .on("click", function(d) {
@@ -552,4 +552,3 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
 
     }
 }; // END updateDrawScatter FUNCTION
-
