@@ -187,7 +187,7 @@ export var brain = function(rawData, selectedGraph) {
   let ageFareData = rawData.slice(0);
   let ageCountData = rawData.slice(0);
   let genderData = rawData.slice(0); // Really important (sortByGender and assignXY modify titanicData)
-   
+
 
    // findAgeRange();
   let ageBreakdown = breakdownAgeCount(ageCountData);
@@ -230,10 +230,6 @@ export var drawScatter = function(d3, preData) {
   // set the ranges for x and y
   let x = d3.scaleLinear().range([0, width]);
   let y = d3.scaleLinear().range([height, 0]);
-
-
-  var x = d3.scaleLinear().range([0, width]);
-  var y = d3.scaleLinear().range([height, 0]);
 
 
   // append the svg object to the body of the page
@@ -299,7 +295,7 @@ export var drawScatter = function(d3, preData) {
         console.log(d);
       });
 
-  
+
   // add the X Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -337,6 +333,23 @@ export var drawScatter = function(d3, preData) {
         .style("font-size", "20px")
         .text("Total Passengers by Age");
 
+  // // labels for gender cluster
+  // var maleLabel = svg.append("text")
+  //       .attr("x", (margin.top + 200))
+  //       .attr("y", (margin.bottom))
+  //       .attr("text-anchor", "middle")
+  //       .attr("class", "male")
+  //       .style("font-size", "20px")
+  //       .text("Male");
+  //
+  // var femaleLabel = svg.append("text")
+  //       .attr("x", (margin.top + 800))
+  //       .attr("y", (margin.bottom))
+  //       .attr("text-anchor", "right")
+  //       .attr("class", "female")
+  //       .style("font-size", "20px")
+  //       .text("Female");
+
 
   //UPDATE GRAPH
   function dance() {
@@ -351,7 +364,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("#count-age").on("click", function() {
     dance();
     setTimeout(function() {
-      updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 2, title);
+      updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 2, title, margin);
     }, 400);
   });
 
@@ -359,7 +372,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("#fare-age").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 1, title);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 1, title, margin);
     }, 400);
   });
 
@@ -367,7 +380,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("#gender").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 3, title);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 3, title, margin);
     }, 400);
   });
 
@@ -415,7 +428,7 @@ export var drawScatter = function(d3, preData) {
   });
 }; // END drawScatter FUNCTION
 
-export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph, title) {
+export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph, title, margin) {
 
   var div = d3.select("body").append("div")
     .attr("class", "tooltipCluster")
@@ -442,6 +455,23 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
   } else if (type === "cluster") {
     x.domain([0, 100]);
     y.domain([0, 100]);
+
+    // labels for gender cluster
+    var maleLabel = svg.append("text")
+          .attr("x", (margin.top + 200))
+          .attr("y", (margin.bottom))
+          .attr("text-anchor", "middle")
+          .attr("class", "male")
+          .style("font-size", "20px")
+          .text("Male");
+
+    var femaleLabel = svg.append("text")
+          .attr("x", (margin.top + 568))
+          .attr("y", (margin.bottom))
+          .attr("text-anchor", "right")
+          .attr("class", "female")
+          .style("font-size", "20px")
+          .text("Female");
   } else {
     console.log("wut?");
   }
@@ -467,12 +497,22 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
     } else if (selectedGraph === 3) {
       title
         .text("Total Passengers by Gender");
+      // legend();
     }
   }
 
   updateXLabel();
   updateYLabel();
   updateTitle();
+
+  // legend for gender graph
+  // function legend() {
+  //   var legend = svg.append('g')
+  //   .attr("class","legend")
+  //   .attr("transform","translate(50,30)")
+  //   .style("font-size","12px")
+  //   .call(d3.legend)
+  // }
 
   svg.selectAll("circle")
     .data(data)
@@ -562,4 +602,3 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
 
     }
 }; // END updateDrawScatter FUNCTION
-
