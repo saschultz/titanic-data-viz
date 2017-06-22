@@ -27,7 +27,9 @@ $ npm install d3-ng2-service --save
 $ atom .
 $ touch src/app/api-keys.ts
 ```
-write:
+* add project to Firebase https://firebase.google.com/
+* select 'add Firebase to your web app' to generate API info
+* in api-keys.ts write:
 ```
  export var masterFirebaseConfig = {
    apiKey: "Your API info",
