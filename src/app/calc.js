@@ -278,7 +278,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("h4").on("click", function() {
     dance();
     setTimeout(function() {
-      updateDrawScatter(d3, svg, x, y, height, preData, 2);
+      updateDrawScatter(d3, svg, x, y, height, width, preData, 2);
     }, 400);
     
   });    
@@ -286,14 +286,14 @@ export var drawScatter = function(d3, preData) {
   d3.select("h3").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, preData, 1)
+    updateDrawScatter(d3, svg, x, y, height, width, preData, 1);
     }, 400);
   });
 
   d3.select("h5").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, preData, 3);
+    updateDrawScatter(d3, svg, x, y, height, width, preData, 3);
     }, 400);
   });
 
@@ -302,8 +302,8 @@ export var drawScatter = function(d3, preData) {
   function dance() {
     d3.selectAll("circle")
       .transition()
-      .attr("cx", function() { return Math.random() * width;})
-      .attr("cy", function() { return Math.random() * height;})
+      .attr("cx", function() { return Math.random() * width ;})
+      .attr("cy", height)
       .duration(400);
   }
 
@@ -312,7 +312,7 @@ export var drawScatter = function(d3, preData) {
 
 
 
-export var updateDrawScatter = function(d3, svg, x, y, height, preData, selectedGraph) {
+export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
 
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
@@ -338,51 +338,54 @@ export var updateDrawScatter = function(d3, svg, x, y, height, preData, selected
     .data(data)
     .enter().append("circle")
       .attr("r", 2.5)
-      .attr("cx", function(d) { return x(d[prop1]); })
-      .attr("cy", function(d) { return y(d[prop2]); })
+      .attr("cx", function() {return Math.random() * 6000;})
+      .attr("cy", height)
+      .style("opacity", 0)
         .on("click", function(d) {
           console.log(d);
         });
 
     d3.selectAll("circle")
       .data(data)
+      .exit()
       .transition()
-      .duration(800)
+      .duration(1000)
+      .attr("cy", function() {return Math.random() * -40000;})
+      .remove();
+    
+    d3.selectAll("circle")
+      .data(data)
+      .transition()
+      .duration(900)
+      .style("opacity", 100)
       .attr("cx", function(d) {return x(d[prop1]);})
       .attr("cy", function(d) {return y(d[prop2]);});
 
-    d3.selectAll("circle")
-      .data(data)
-      .exit()
-      .transition()
-      .duration(300)
-      .style("opacity", 0)
-      .remove();
 
 //AXIS
 
     if (type === "scatter") {
       d3.select(".x-axis")
         .transition()
-        .duration(800)
+        .duration(1000)
         .style("opacity", 100)
         .call(d3.axisBottom(x));
 
       d3.select(".y-axis")
         .transition()
-        .duration(800)
+        .duration(1000)
         .style("opacity", 100)
         .call(d3.axisLeft(y));
 
     } else if (type === "cluster") {
       d3.select(".x-axis")
         .transition()
-        .duration(800)
+        .duration(1000)
         .style("opacity", 0);
 
         d3.select(".y-axis")
         .transition()
-        .duration(800)
+        .duration(1000)
         .style("opacity", 0);
     }
 };
