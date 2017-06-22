@@ -17,7 +17,7 @@ export var findAgeRange = function(titanicData) {
       ageRange.max = personAge;
     }
   }
-  console.log(ageRange);
+  // console.log(ageRange);
   return ageRange;
 };
 
@@ -38,14 +38,14 @@ export var breakdownAgeCount = function(titanicData) {
     }
 
   }
-  console.log(ages);
+  // console.log(ages);
   return ages;
 };
 
 
 //Input: {Age: age count}. Output: [{age: a specific age, count: the number of people of that age}]
 export var formatData = function(ageBreakdown) {
-  console.log(ageBreakdown);
+  // console.log(ageBreakdown);
   delete ageBreakdown[NaN];
 
   let formattedData = [];
@@ -64,7 +64,7 @@ export var deleteNAN = function(data) {
       delete data[i];
     }
   }
-  console.log(data);
+  // console.log(data);
   return data;
 };
 
@@ -89,7 +89,7 @@ export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
   for (let i in ageBreakdown) {
     if (!ageBreakdown.hasOwnProperty(i)) {continue;}
 
-    console.log(ageBreakdown[i]);
+    // console.log(ageBreakdown[i]);
     agePercentages[i] = (ageBreakdown[i] * 100 / totalAgeCount);
 
   }
@@ -181,7 +181,8 @@ export var assignXY = function(genderArray) {
 
 //BRAIN ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-export var brain = function(titanicData, selectedGraph) {
+export var brain = function(rawData, selectedGraph) {
+  let titanicData = rawData.slice(0); //–––Really important (sortByGender and assignXY modify titanicData)
    // findAgeRange();
   let ageBreakdown = breakdownAgeCount(titanicData);
   let totalAgeCount = countTotalAgesNum(ageBreakdown);
@@ -194,9 +195,11 @@ export var brain = function(titanicData, selectedGraph) {
   let genderArray = sortByGender(titanicData);
   let maleFemale = (assignXY(genderArray));
 
+  console.log(titanicData);
+
   // Select a graph to display – return values
 
-  if (selectedGraph === 1) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
+  if (selectedGraph === 1) { return [rawData, "age", "fare", "scatter"]; }
   if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
   if (selectedGraph === 3) { return [maleFemale, "x", "y", "cluster"]; }
 
@@ -374,7 +377,6 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
   });
 
  if (type === "scatter") {
-   console.log(typeof data)
     x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
     y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
   } else if (type === "cluster") {
