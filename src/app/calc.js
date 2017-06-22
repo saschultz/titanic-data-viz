@@ -324,9 +324,9 @@ export var drawScatter = function(d3, preData) {
   // title for graph on default load
   var title = svg.append("text")
         .attr("x", (width / 2))
-        .attr("y", 0 - (height / 200))
+        .attr("y", 0 - (height / 800))
         .attr("text-anchor", "middle")
-        .style("font-size", "20px")
+        .style("font-size", "25px")
         .text("Total Passengers by Age");
 
   // // labels for gender cluster

@@ -8,9 +8,9 @@
 </article>
 
 <div class="graph">
-  <h3 class="f6 link dim br1 ba ph3 pv2 mb2 dib black" id="count-age" (click)="selectGraph('countAge')">count-age</h3>
-  <h3 class="f6 link dim br1 ba ph3 pv2 mb2 dib black" id="fare-age" (click)="selectGraph('fareAge')">fare-age</h3>
-  <h3 class="f6 link dim br1 ba ph3 pv2 mb2 dib black" id="gender" (click)="selectGraph('gender')">Cluster</h3>
-  <h3 [hidden]="selectedGraph != 'fareAge'" id="kill-fare-age" >Show Survivors</h3>
-  <h3 [hidden]="selectedGraph != 'gender'" id="kill-gender" >Show Survivors</h3>
+  <h3 class="f6 link dim br1 ba ph3 pv2 mb2 dib black button-space" id="count-age" (click)="selectGraph('countAge')">count-age</h3>
+  <h3 class="f6 link dim br1 ba ph3 pv2 mb2 dib black button-space" id="fare-age" (click)="selectGraph('fareAge')">fare-age</h3>
+  <h3 class="f6 link dim br1 ba ph3 pv2 mb2 dib black button-space" id="gender" (click)="selectGraph('gender')">Cluster</h3>
+  <h3 class="button-space"[hidden]="selectedGraph != 'fareAge'" id="kill-fare-age" >Show Survivors</h3>
+  <h3 class="button-space"[hidden]="selectedGraph != 'gender'" id="kill-gender" >Show Survivors</h3>
 </div>

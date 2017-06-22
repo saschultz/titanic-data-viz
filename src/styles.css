@@ -43,5 +43,8 @@ div.tooltipCluster {
 .header {
   text-align: right;
   margin: 2vh 2vw;
+}
 
+.button-space {
+  margin-left: 2.5vw;
 }
