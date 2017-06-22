@@ -274,7 +274,7 @@ export var drawScatter = function(d3, preData) {
       .attr("cx", function(d) { return x(d[prop1]); })
       .attr("cy", function(d) { return y(d[prop2]); })
       .on('mouseover', function(d){
-        d3.selectAll("circle").style("fill", "white")
+        d3.selectAll("circle").style("fill", "#FEA575")
         d3.select(this).attr("r", 5).style("fill", "black")
         // select("circle")
         div.style("opacity", .9);
@@ -474,7 +474,7 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
       .attr("cy", height)
       .style("opacity", 0)
       .on('mouseover', function(d){
-        d3.selectAll("circle").style("fill", "white")
+        d3.selectAll("circle").style("fill", "#FEA575")
         d3.select(this).attr("r", 5).style("fill", "black")
         div.transition()
           .duration(20)

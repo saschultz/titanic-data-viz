@@ -32,7 +32,16 @@ div.tooltipCluster {
 
 }
 
+#disclaimer {
+  text-align: right;
+}
 
 .passenger {
   text-align: center;
+}
+
+.header {
+  text-align: right;
+  margin: 2vh 2vw;
+
 }
