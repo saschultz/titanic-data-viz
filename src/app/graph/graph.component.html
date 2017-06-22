@@ -1,6 +1,7 @@
 <div class="graph">
-  <h4>Change</h4>
-  <h3>Change again</h3>
-  <h6>Change even more!</h6>
-  <h5>ClusterF***</h5>
+  <p id="count-age" (click)="selectGraph('countAge')">count-age</p>
+  <p id="fare-age" (click)="selectGraph('fareAge')">fare-age</p>
+  <p id="gender" (click)="selectGraph('gender')">ClusterF***</p>
+  <p [hidden]="selectedGraph != 'fareAge'" id="kill-fare-age" >Kill</p>
+  <p [hidden]="selectedGraph != 'gender'" id="kill-gender" >Kill</p>
 </div>
