@@ -232,10 +232,6 @@ export var drawScatter = function(d3, preData) {
   let y = d3.scaleLinear().range([height, 0]);
 
 
-  var x = d3.scaleLinear().range([0, width]);
-  var y = d3.scaleLinear().range([height, 0]);
-
-
   // append the svg object to the body of the page
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
@@ -278,23 +274,19 @@ export var drawScatter = function(d3, preData) {
       .attr("cx", function(d) { return x(d[prop1]); })
       .attr("cy", function(d) { return y(d[prop2]); })
       .on('mouseover', function(d){
-        d3.selectAll("circle").style("fill", "black").transition().duration(1000)
-        d3.select(this).transition().duration(300).attr("r", 5).style("fill", "black")
+        d3.selectAll("circle").style("fill", "black")
+        d3.select(this).attr("r", 5).style("fill", "black")
         // select("circle")
-        div.transition()
-          .duration(200)
-          .style("opacity", .9);
+        div.style("opacity", .9);
         div.html(d.age + "<small>" + " people of the age " + "</small>" + d.count)
 
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
       })
       .on("mouseout", function(d) {
-        d3.selectAll("circle").transition().duration(500).style("fill", "black")
-        d3.select(this).transition().duration(500).attr("r", 2.5)
-        div.transition()
-          .duration(500)
-          .style("opacity", 0);})
+        d3.selectAll("circle").style("fill", "black")
+        d3.select(this).attr("r", 2.5)
+        div.style("opacity", 0);})
       .on("click", function(d) {
         console.log(d);
       });
@@ -482,10 +474,10 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
       .attr("cy", height)
       .style("opacity", 0)
       .on('mouseover', function(d){
-        d3.selectAll("circle").style("fill", "white").transition().duration(1000)
-        d3.select(this).transition().duration(300).attr("r", 5).style("fill", "black")
+        d3.selectAll("circle").style("fill", "white")
+        d3.select(this).attr("r", 5).style("fill", "black")
         div.transition()
-          .duration(200)
+          .duration(20)
           .style("opacity", .9);
         div.html(d.name + "<small>" + " age " + "</small>" + d.age)
         .style("left", (d3.event.pageX + 30) + "px")
@@ -493,11 +485,9 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
 
       })
       .on("mouseout", function(d) {
-        d3.selectAll("circle").transition().duration(500).style("fill", "black")
-        d3.select(this).transition().duration(500).attr("r", 2.5)
-        div.transition()
-          .duration(500)
-          .style("opacity", 0);
+        d3.selectAll("circle").style("fill", "black")
+        d3.select(this).attr("r", 2.5)
+        div.style("opacity", 0);
        })
       .on("click", function(d) {
         console.log(d);
