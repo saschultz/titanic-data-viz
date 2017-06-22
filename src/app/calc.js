@@ -267,18 +267,25 @@ export var drawScatter = function(d3, preData) {
   svg.selectAll("dot")
     .data(data)
     .enter().append("circle")
-      .attr("r", 2.5)
+      .attr("r", 5)
       .attr("cx", function(d) { return x(d[prop1]); })
       .attr("cy", function(d) { return y(d[prop2]); })
+      // .on('mouseover', function(d) {
+      //   .attr("r", 2.5)
+      // })
       .on('mouseover', function(d){
+        d3.select(this).transition().duration(100).attr("r", 10)
+        // select("circle")
         div.transition()
           .duration(200)
           .style("opacity", .9);
         div.html(d.age)
+
         .style("left", (d3.event.pageX) + "px")
         .style("top", (d3.event.pageY - 28) + "px");
       })
       .on("mouseout", function(d) {
+        d3.select(this).transition().duration(100).attr("r", 5)
         div.transition()
           .duration(500)
           .style("opacity", 0);})
@@ -380,7 +387,7 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
   var div = d3.select("body").append("div")
     .attr("class", "tooltip2")
     .style("opacity", 0);
-    
+
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
   let data = dataArray[0],
