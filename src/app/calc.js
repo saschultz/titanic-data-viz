@@ -468,19 +468,15 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
         .duration(800)
         .style("opacity", 1e-6);
       xLabel
-        // .text(' ');
-
-          .transition()
-          .style("opacity", .2e-6)
-          .duration(800);
+        .transition()
+        .style("opacity", .2e-6)
+        .duration(800);
 
         d3.select(".y-axis")
           .transition()
           .duration(800)
           .style("opacity", 1e-6);
         yLabel
-          // .text(' ');
-
           .transition()
           .style("opacity", .2e-6)
           .duration(800);
