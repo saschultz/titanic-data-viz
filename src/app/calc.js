@@ -224,14 +224,16 @@ export var drawScatter = function(d3, preData) {
 
   let margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 1200 - margin.left - margin.right,
-      height = 550 - margin.top - margin.bottom;
-
+      height = 600 - margin.top - margin.bottom;
 
 
   // set the ranges for x and y
   let x = d3.scaleLinear().range([0, width]);
   let y = d3.scaleLinear().range([height, 0]);
 
+
+  var x = d3.scaleLinear().range([0, width]);
+  var y = d3.scaleLinear().range([height, 0]);
 
 
   // append the svg object to the body of the page
@@ -253,7 +255,8 @@ export var drawScatter = function(d3, preData) {
   //   if (error) throw error;
 
 
-   // format the data
+
+  // format the data
   data.forEach(function(d) {
     d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
     d[prop2] = +d[prop2];
@@ -262,6 +265,7 @@ export var drawScatter = function(d3, preData) {
 
   // scale the range of the data
   // d3.extent([1, 4, 3, 2]) -> [1, 4]
+
   x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
   y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
 
@@ -295,18 +299,43 @@ export var drawScatter = function(d3, preData) {
         console.log(d);
       });
 
-
+  
   // add the X Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .attr("class", "x-axis")
       .call(d3.axisBottom(x));
 
+ // label the X Axis for graph on default load
+ var xLabel = svg.append("text")
+     .attr("transform",
+           "translate(" + (width/2) + " ," +
+                          (height + margin.top + 6.5) + ")")
+     .style("text-anchor", "middle")
+     .text(prop1);
+
 
   // add the Y Axis
   svg.append("g")
       .attr("class", "y-axis")
       .call(d3.axisLeft(y));
+
+  // label the Y Axis for graph on default load
+  var yLabel = svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text(prop2);
+
+  // title for graph on default load
+  var title = svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 0 - (height / 100))
+        .attr("text-anchor", "middle")
+        .style("font-size", "20px")
+        .text("Total Passengers by Age");
 
 
   //UPDATE GRAPH
@@ -322,16 +351,15 @@ export var drawScatter = function(d3, preData) {
   d3.select("#count-age").on("click", function() {
     dance();
     setTimeout(function() {
-      updateDrawScatter(d3, svg, x, y, height, width, preData, 2);
+      updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 2, title);
     }, 400);
-  });    
-
+  });
 
 
   d3.select("#fare-age").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, width, preData, 1);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 1, title);
     }, 400);
   });
 
@@ -339,13 +367,12 @@ export var drawScatter = function(d3, preData) {
   d3.select("#gender").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, width, preData, 3);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 3, title);
     }, 400);
   });
 
 
-  //DROP DECEASED
-
+  //Drop Deceased
   d3.select("#kill-fare-age").on("click", function() {
     d3.selectAll("circle")
       .transition()
@@ -386,10 +413,9 @@ export var drawScatter = function(d3, preData) {
       }
     });
   });
-};
+}; // END drawScatter FUNCTION
 
-
-export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
+export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph, title) {
 
   var div = d3.select("body").append("div")
     .attr("class", "tooltipCluster")
@@ -419,6 +445,34 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
   } else {
     console.log("wut?");
   }
+
+  function updateXLabel() {
+    xLabel
+      .text(prop1)
+  }
+
+  function updateYLabel() {
+    yLabel
+      .text(prop2)
+  }
+
+  function updateTitle() {
+    console.log(selectedGraph);
+    if (selectedGraph === 1) {
+      title
+        .text("Ticket Fare by Age");
+    } else if (selectedGraph === 2) {
+      title
+        .text("Total Passengers by Age")
+    } else if (selectedGraph === 3) {
+      title
+        .text("Total Passengers by Gender");
+    }
+  }
+
+  updateXLabel();
+  updateYLabel();
+  updateTitle();
 
   svg.selectAll("circle")
     .data(data)
@@ -450,6 +504,7 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       });
 
 
+
     d3.selectAll("circle")
       .data(data)
       .exit()
@@ -457,7 +512,6 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .duration(900)
       .attr("cy", function() {return Math.random() * -60000;})
       .remove();
-
 
     d3.selectAll("circle")
       .data(data)
@@ -476,23 +530,36 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
         .duration(800)
         .style("opacity", 100)
         .call(d3.axisBottom(x));
+      xLabel
+        .style("opacity", 1);
 
       d3.select(".y-axis")
         .transition()
         .duration(800)
         .style("opacity", 100)
         .call(d3.axisLeft(y));
+      yLabel
+        .style("opacity", 1);
 
     } else if (type === "cluster") {
       d3.select(".x-axis")
         .transition()
         .duration(800)
         .style("opacity", 1e-6);
+      xLabel
+        .transition()
+        .style("opacity", .2e-6)
+        .duration(800);
 
         d3.select(".y-axis")
-        .transition()
-        .duration(800)
-        .style("opacity", 1e-6);
+          .transition()
+          .duration(800)
+          .style("opacity", 1e-6);
+        yLabel
+          .transition()
+          .style("opacity", .2e-6)
+          .duration(800);
+
     }
-};
+}; // END updateDrawScatter FUNCTION
 

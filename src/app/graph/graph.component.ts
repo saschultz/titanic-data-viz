@@ -24,7 +24,7 @@ export class GraphComponent implements OnInit {
   private d3: D3;
   private parentNativeElement: any;
 
-  constructor(element: ElementRef, d3Service: D3Service, private passengerService: PassengerService) { 
+  constructor(element: ElementRef, d3Service: D3Service, private passengerService: PassengerService) {
     this.d3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
     this.parentNativeElement = element.nativeElement;
   }
@@ -38,8 +38,8 @@ export class GraphComponent implements OnInit {
       d3ParentElement = d3.select(this.parentNativeElement);
 
       // Do d3 stuff
-    }    
-    
+    }
+
 
     this.passengerService.getPassengers().subscribe(data => {
       this.passengers = data;
@@ -51,7 +51,11 @@ export class GraphComponent implements OnInit {
 
   selectGraph(selectedGraph) {
     this.selectedGraph = selectedGraph;
-    console.log(selectedGraph)
+    // console.log(selectedGraph)
+  }
+
+  countAgeLabels() {
+    alert('test');
   }
 
 };
