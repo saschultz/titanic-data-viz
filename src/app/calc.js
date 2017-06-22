@@ -49,7 +49,7 @@ export var formatData = function(ageBreakdown) {
   delete ageBreakdown[NaN];
 
   let formattedData = [];
-  
+
   for (let i in ageBreakdown) {
     if (!ageBreakdown.hasOwnProperty(i)) continue;
 
@@ -104,13 +104,13 @@ export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
 
   // console.log(agePercentages);
   // console.log(totalPercentage);
-  return agePercentages;    
+  return agePercentages;
 };
 
 
 //Input: min age in range, max age in range, {age: percentage of people of that age}. Output: percentage for that range (num).
 export var ageRangePercentage = function(min, max, agePercentages) {
-  let percentage = 0; 
+  let percentage = 0;
 
   for (let i in agePercentages) {
     if (!agePercentages.hasOwnProperty(i)) {continue;}
@@ -146,7 +146,7 @@ export var assignXY = function(genderArray) {
       currentFX = 45,
       currentFY = 10;
 
-  
+
   for (let i = 0; i < male.length; i+=20) {
     for (let j = 0; j < 21; j++) {
       if (i + j < male.length) {
@@ -174,7 +174,7 @@ export var assignXY = function(genderArray) {
   let maleFemale = male.concat(female);
   return maleFemale;
 
-  
+
 };
 
 
@@ -195,7 +195,7 @@ export var brain = function(rawData, selectedGraph) {
   let genderArray = sortByGender(titanicData);
   let maleFemale = (assignXY(genderArray));
 
-  console.log(titanicData);
+  // console.log(titanicData);
 
   // Select a graph to display – return values
 
@@ -211,7 +211,7 @@ export var brain = function(rawData, selectedGraph) {
 
 export var drawScatter = function(d3, preData) {
 
-  let dataArray = brain(preData, 2); 
+  let dataArray = brain(preData, 2);
 
   let data = dataArray[0],
       prop1 = dataArray[1],
@@ -223,15 +223,8 @@ export var drawScatter = function(d3, preData) {
 
 
   // set the ranges
-
- 
   var x = d3.scaleLinear().range([0, width]);
   var y = d3.scaleLinear().range([height, 0]);
- 
-
-  // define the line
-
-
 
   // append the svg object to the body of the page
   // appends a 'group' element to 'svg'
@@ -247,7 +240,7 @@ export var drawScatter = function(d3, preData) {
   // d3.csv("titanic3.csv", function(error, data) {
   //   if (error) throw error;
 
-    
+
     // format the data
   data.forEach(function(d) {
       d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
@@ -256,11 +249,9 @@ export var drawScatter = function(d3, preData) {
 
   // scale the range of the data
   // d3.extent([1, 4, 3, 2]) -> [1, 4]
-  
+
   x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
   y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
-
-
 
   // add the dots
   svg.selectAll("dot")
@@ -272,17 +263,35 @@ export var drawScatter = function(d3, preData) {
       .on("click", function(d) {
         console.log(d);
       });
-      
+
   // add the X Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .attr("class", "x-axis")
       .call(d3.axisBottom(x));
 
+  // label the X Axis for graph on default load
+ var xLabel = svg.append("text")
+     .attr("transform",
+           "translate(" + (width/2) + " ," +
+                          (height + margin.top + 7) + ")")
+     .style("text-anchor", "middle")
+     .text(prop1);
+  console.log(xLabel);
+
   // add the Y Axis
   svg.append("g")
       .attr("class", "y-axis")
       .call(d3.axisLeft(y));
+
+  // label the Y Axis for graph on default load
+  var yLabel = svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text(prop2);
 
   // add stat div
 
@@ -299,27 +308,27 @@ export var drawScatter = function(d3, preData) {
   d3.select("#count-age").on("click", function() {
     dance();
     setTimeout(function() {
-      updateDrawScatter(d3, svg, x, y, height, width, preData, 2);
+      updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 2);
     }, 400);
-    
-  });    
+
+  });
 
   d3.select("#fare-age").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, width, preData, 1);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 1);
     }, 400);
   });
 
   d3.select("#gender").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, width, preData, 3);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 3);
     }, 400);
   });
 
-  //Drop Deceased
 
+  //Drop Deceased
   d3.select("#kill-fare-age").on("click", function() {
     d3.selectAll("circle")
       .transition()
@@ -362,7 +371,7 @@ export var drawScatter = function(d3, preData) {
 };
 
 
-export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
+export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph) {
 
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
@@ -386,6 +395,20 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
     console.log("wut?");
   }
 
+  console.log(xLabel);
+  function updateXLabel() {
+    xLabel
+      .text(prop1)
+  }
+
+  function updateYLabel() {
+    yLabel
+      .text(prop2)
+  }
+
+  updateXLabel();
+  updateYLabel();
+
   svg.selectAll("circle")
     .data(data)
     .enter().append("circle")
@@ -404,7 +427,7 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .duration(900)
       .attr("cy", function() {return Math.random() * -60000;})
       .remove();
-    
+
     d3.selectAll("circle")
       .data(data)
       .transition()
@@ -440,6 +463,3 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
         .style("opacity", 1e-6);
     }
 };
-
-
-// Cluster Chart
