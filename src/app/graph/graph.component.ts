@@ -43,13 +43,14 @@ export class GraphComponent implements OnInit {
 
     this.passengerService.getPassengers().subscribe(data => {
       this.passengers = data;
+      // calc.brain(this.passengers, 1)
       calc.drawScatter(d3, this.passengers);
     });
   }
 
   selectGraph(selectedGraph) {
     this.selectedGraph = selectedGraph;
-    console.log(selectedGraph)
+    // console.log(selectedGraph)
   }
 
   countAgeLabels() {

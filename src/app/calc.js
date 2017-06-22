@@ -17,7 +17,7 @@ export var findAgeRange = function(titanicData) {
       ageRange.max = personAge;
     }
   }
-  console.log(ageRange);
+  // console.log(ageRange);
   return ageRange;
 };
 
@@ -38,14 +38,14 @@ export var breakdownAgeCount = function(titanicData) {
     }
 
   }
-  console.log(ages);
+  // console.log(ages);
   return ages;
 };
 
 
 //Input: {Age: age count}. Output: [{age: a specific age, count: the number of people of that age}]
 export var formatData = function(ageBreakdown) {
-  console.log(ageBreakdown);
+  // console.log(ageBreakdown);
   delete ageBreakdown[NaN];
 
   let formattedData = [];
@@ -64,7 +64,7 @@ export var deleteNAN = function(data) {
       delete data[i];
     }
   }
-  console.log(data);
+  // console.log(data);
   return data;
 };
 
@@ -89,7 +89,7 @@ export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
   for (let i in ageBreakdown) {
     if (!ageBreakdown.hasOwnProperty(i)) {continue;}
 
-    console.log(ageBreakdown[i]);
+    // console.log(ageBreakdown[i]);
     agePercentages[i] = (ageBreakdown[i] * 100 / totalAgeCount);
 
   }
@@ -181,7 +181,8 @@ export var assignXY = function(genderArray) {
 
 //BRAIN ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-export var brain = function(titanicData, selectedGraph) {
+export var brain = function(rawData, selectedGraph) {
+  let titanicData = rawData.slice(0); //–––Really important (sortByGender and assignXY modify titanicData)
    // findAgeRange();
   let ageBreakdown = breakdownAgeCount(titanicData);
   let totalAgeCount = countTotalAgesNum(ageBreakdown);
@@ -194,9 +195,11 @@ export var brain = function(titanicData, selectedGraph) {
   let genderArray = sortByGender(titanicData);
   let maleFemale = (assignXY(genderArray));
 
+  // console.log(titanicData);
+
   // Select a graph to display – return values
 
-  if (selectedGraph === 1) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
+  if (selectedGraph === 1) { return [rawData, "age", "fare", "scatter"]; }
   if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
   if (selectedGraph === 3) { return [maleFemale, "x", "y", "cluster"]; }
 
@@ -222,12 +225,9 @@ export var drawScatter = function(d3, preData) {
   // set the ranges
 
 
+
   var x = d3.scaleLinear().range([0, width]);
   var y = d3.scaleLinear().range([height, 0]);
-
-
-  // define the line
-
 
 
   // append the svg object to the body of the page
@@ -260,8 +260,6 @@ export var drawScatter = function(d3, preData) {
   y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
 
 
-
-
   // add the dots
   svg.selectAll("dot")
     .data(data)
@@ -279,10 +277,28 @@ export var drawScatter = function(d3, preData) {
       .attr("class", "x-axis")
       .call(d3.axisBottom(x));
 
+  // label the X Axis for graph on default load
+ var xLabel = svg.append("text")
+     .attr("transform",
+           "translate(" + (width/2) + " ," +
+                          (height + margin.top + 7) + ")")
+     .style("text-anchor", "middle")
+     .text(prop1);
+  console.log(xLabel);
+
   // add the Y Axis
   svg.append("g")
       .attr("class", "y-axis")
       .call(d3.axisLeft(y));
+
+  // label the Y Axis for graph on default load
+  var yLabel = svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text(prop2);
 
   // add stat div
 
@@ -299,7 +315,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("#count-age").on("click", function() {
     dance();
     setTimeout(function() {
-      updateDrawScatter(d3, svg, x, y, height, width, preData, 2);
+      updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 2);
     }, 400);
 
   });
@@ -307,7 +323,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("#fare-age").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, width, preData, 1);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 1);
     }, 400);
   });
 
@@ -315,12 +331,12 @@ export var drawScatter = function(d3, preData) {
   d3.select("#gender").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, height, width, preData, 3);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 3);
     }, 400);
   });
 
-  //Drop Deceased
 
+  //Drop Deceased
   d3.select("#kill-fare-age").on("click", function() {
     d3.selectAll("circle")
       .transition()
@@ -362,9 +378,7 @@ export var drawScatter = function(d3, preData) {
   });
 };
 
-
-
-export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
+export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph) {
 
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
@@ -379,7 +393,6 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
   });
 
  if (type === "scatter") {
-   console.log(typeof data)
     x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
     y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
   } else if (type === "cluster") {
@@ -389,6 +402,18 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
     console.log("wut?");
   }
 
+  function updateXLabel() {
+    xLabel
+      .text(prop1)
+  }
+
+  function updateYLabel() {
+    yLabel
+      .text(prop2)
+  }
+
+  updateXLabel();
+  updateYLabel();
 
   svg.selectAll("circle")
     .data(data)
@@ -438,10 +463,23 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
         .transition()
         .duration(800)
         .style("opacity", 1e-6);
+      xLabel
+        .text(' ');
+
+          // .transition()
+          // .duration(100)
+          // .style("opacity", 1e-6);
 
         d3.select(".y-axis")
-        .transition()
-        .duration(800)
-        .style("opacity", 1e-6);
+          .transition()
+          .duration(800)
+          .style("opacity", 1e-6);
+        yLabel
+          .text(' ');
+
+          // .transition()
+          // .style("opacity", 1e-6)
+          // .duration(100);
+
     }
 };
