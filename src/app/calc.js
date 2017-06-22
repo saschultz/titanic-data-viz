@@ -301,12 +301,12 @@ export var drawScatter = function(d3, preData) {
       .text(prop2);
 
   // title for graph on default load
-  svg.append("text")
+  var title = svg.append("text")
         .attr("x", (width / 2))
         .attr("y", 0 - (height / 100))
         .attr("text-anchor", "middle")
         .style("font-size", "20px")
-        .text("Number of Passengers per Age");
+        .text("Total Passengers by Age");
 
 
   //UPDATE GRAPH
@@ -321,7 +321,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("#count-age").on("click", function() {
     dance();
     setTimeout(function() {
-      updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 2);
+      updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 2, title);
     }, 400);
 
   });
@@ -329,7 +329,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("#fare-age").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 1);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 1, title);
     }, 400);
   });
 
@@ -337,7 +337,7 @@ export var drawScatter = function(d3, preData) {
   d3.select("#gender").on("click", function() {
     dance();
     setTimeout(function() {
-    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 3);
+    updateDrawScatter(d3, svg, x, y, xLabel, yLabel, height, width, preData, 3, title);
     }, 400);
   });
 
@@ -384,8 +384,8 @@ export var drawScatter = function(d3, preData) {
   });
 }; // END drawScatter FUNCTION
 
-export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph) {
-
+export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph, title) {
+  console.log(title);
   let dataArray = brain(preData, selectedGraph); //[data, prop1, prop2]
 
   let data = dataArray[0],
@@ -418,8 +418,23 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
       .text(prop2)
   }
 
+  function updateTitle() {
+    console.log(selectedGraph);
+    if (selectedGraph === 1) {
+      title
+        .text("Ticket Fare by Age");
+    } else if (selectedGraph === 2) {
+      title
+        .text("Total Passengers by Age")
+    } else if (selectedGraph === 3) {
+      title
+        .text("Total Passengers by Gender");
+    }
+  }
+
   updateXLabel();
   updateYLabel();
+  updateTitle();
 
   svg.selectAll("circle")
     .data(data)
