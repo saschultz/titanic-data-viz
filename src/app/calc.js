@@ -60,11 +60,12 @@ export var formatData = function(ageBreakdown) {
 
 export var deleteNAN = function(data) {
   for (let i in data) {
+    if (!data.hasOwnProperty(i)) {continue;}
     if ( isNaN(parseInt(data[i].age)) === true) {
       delete data[i];
     }
   }
-  // console.log(data);
+  console.log(data);
   return data;
 };
 
@@ -182,27 +183,31 @@ export var assignXY = function(genderArray) {
 //BRAIN ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 export var brain = function(rawData, selectedGraph) {
-  let titanicData = rawData.slice(0); //–––Really important (sortByGender and assignXY modify titanicData)
+
+  let ageFareData = rawData.slice(0);
+  let ageCountData = rawData.slice(0);
+  let genderData = rawData.slice(0); // Really important (sortByGender and assignXY modify titanicData)
+   
+
    // findAgeRange();
-  let ageBreakdown = breakdownAgeCount(titanicData);
-  let totalAgeCount = countTotalAgesNum(ageBreakdown);
-  let agePercentages = ageByPercentage(ageBreakdown, totalAgeCount);
-  let agePercentageRange = ageRangePercentage(20, 30, agePercentages);
+  let ageBreakdown = breakdownAgeCount(ageCountData);
+
+  // let totalAgeCount = countTotalAgesNum(ageBreakdown);
+  // let agePercentages = ageByPercentage(ageBreakdown, totalAgeCount);
+  // let agePercentageRange = ageRangePercentage(20, 30, agePercentages);
+
   let ageBreakExclNaN = formatData(ageBreakdown);
 
-  let rawWithoutNaN = deleteNAN(titanicData);
+  // let rawWithoutNaN = deleteNAN(ageFareData); still broken...
 
-  let genderArray = sortByGender(titanicData);
+  let genderArray = sortByGender(genderData);
   let maleFemale = (assignXY(genderArray));
 
-  console.log(titanicData);
 
-  // Select a graph to display – return values
-
+  // Select a graph to display and return it to drawScatter
   if (selectedGraph === 1) { return [rawData, "age", "fare", "scatter"]; }
   if (selectedGraph === 2) { return [ageBreakExclNaN, "age", "count", "scatter"]; }
   if (selectedGraph === 3) { return [maleFemale, "x", "y", "cluster"]; }
-
 };
 
 
@@ -217,32 +222,28 @@ export var drawScatter = function(d3, preData) {
       prop1 = dataArray[1],
       prop2 = dataArray[2];
 
-  var margin = {top: 20, right: 20, bottom: 30, left: 50},
+  let margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 1200 - margin.left - margin.right,
       height = 550 - margin.top - margin.bottom;
 
 
-  // set the ranges
 
-
-  var x = d3.scaleLinear().range([0, width]);
-  var y = d3.scaleLinear().range([height, 0]);
-
-
-  // define the line
+  // set the ranges for x and y
+  let x = d3.scaleLinear().range([0, width]);
+  let y = d3.scaleLinear().range([height, 0]);
 
 
 
   // append the svg object to the body of the page
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
-  var svg = d3.select("body")
-    .append("svg")
+  var svg = d3.select("body").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
+
 
   var div = d3.select("body").append("div")
     .attr("class", "tooltipCountAge")
@@ -252,18 +253,17 @@ export var drawScatter = function(d3, preData) {
   //   if (error) throw error;
 
 
-    // format the data
+   // format the data
   data.forEach(function(d) {
-      d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
-      d[prop2] = +d[prop2];
+    d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
+    d[prop2] = +d[prop2];
   });
+
 
   // scale the range of the data
   // d3.extent([1, 4, 3, 2]) -> [1, 4]
-
   x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
   y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
-
 
 
   // add the dots
@@ -295,36 +295,38 @@ export var drawScatter = function(d3, preData) {
         console.log(d);
       });
 
+
   // add the X Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .attr("class", "x-axis")
       .call(d3.axisBottom(x));
 
+
   // add the Y Axis
   svg.append("g")
       .attr("class", "y-axis")
       .call(d3.axisLeft(y));
-
-  // add stat div
 
 
   //UPDATE GRAPH
   function dance() {
     d3.selectAll("circle")
       .transition()
-      .attr("cx", function() { return Math.random() * width ;})
+      .attr("cx", function() { return Math.random() * width ;}) //specify range
       .attr("cy", height)
       .duration(400);
   }
+
 
   d3.select("#count-age").on("click", function() {
     dance();
     setTimeout(function() {
       updateDrawScatter(d3, svg, x, y, height, width, preData, 2);
     }, 400);
+  });    
 
-  });
+
 
   d3.select("#fare-age").on("click", function() {
     dance();
@@ -333,6 +335,7 @@ export var drawScatter = function(d3, preData) {
     }, 400);
   });
 
+
   d3.select("#gender").on("click", function() {
     dance();
     setTimeout(function() {
@@ -340,7 +343,8 @@ export var drawScatter = function(d3, preData) {
     }, 400);
   });
 
-  //Drop Deceased
+
+  //DROP DECEASED
 
   d3.select("#kill-fare-age").on("click", function() {
     d3.selectAll("circle")
@@ -362,28 +366,29 @@ export var drawScatter = function(d3, preData) {
       });
   });
 
-   d3.select("#kill-gender").on("click", function(d) {
-    d3.selectAll("circle")
-      .transition()
-      .duration(800)
-      .style("opacity", function(d) {
-        if (d.survived === "0") {
-          return 1e-6;
-        } else {
-          return 100;
-        }
-      })
-      .attr("cy", function(d) {
-        if (d.survived === "0") {
-          return height;
-        } else {
-          return y(d.y);
-        }
-      });
+
+  d3.select("#kill-gender").on("click", function(d) {
+  d3.selectAll("circle")
+    .transition()
+    .duration(800)
+    .style("opacity", function(d) {
+      if (d.survived === "0") {
+        return 1e-6;
+      } else {
+        return 100;
+      }
+    })
+    .attr("cy", function(d) {
+      if (d.survived === "0") {
+        return Math.random() * 250000;
+      } else {
+        return y(d.y);
+      }
+    });
   });
 };
 
-//draw cluster
+
 export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, selectedGraph) {
 
   var div = d3.select("body").append("div")
@@ -398,9 +403,12 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       type = dataArray[3];
 
   data.forEach(function(d) {
+    if (+d[prop1] !== 0) { // excludes undefined ages - It's a very bad fix to the problem!!!
       d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
       d[prop2] = +d[prop2];
+    }
   });
+
 
  if (type === "scatter") {
     x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
@@ -412,7 +420,6 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
     console.log("wut?");
   }
 
-//Cluster graph dot creation
   svg.selectAll("circle")
     .data(data)
     .enter().append("circle")
@@ -421,11 +428,8 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .attr("cy", height)
       .style("opacity", 0)
       .on('mouseover', function(d){
-// hover over dot
         d3.selectAll("circle").style("fill", "white").transition().duration(1000)
         d3.select(this).transition().duration(300).attr("r", 5).style("fill", "black")
-
-//tool tip CF
         div.transition()
           .duration(200)
           .style("opacity", .9);
@@ -437,15 +441,14 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .on("mouseout", function(d) {
         d3.selectAll("circle").transition().duration(500).style("fill", "black")
         d3.select(this).transition().duration(500).attr("r", 2.5)
-
-
         div.transition()
           .duration(500)
-          .style("opacity", 0);})
-
+          .style("opacity", 0);
+       })
       .on("click", function(d) {
         console.log(d);
       });
+
 
     d3.selectAll("circle")
       .data(data)
@@ -455,6 +458,7 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .attr("cy", function() {return Math.random() * -60000;})
       .remove();
 
+
     d3.selectAll("circle")
       .data(data)
       .transition()
@@ -463,7 +467,8 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .attr("cx", function(d) {return x(d[prop1]);})
       .attr("cy", function(d) {return y(d[prop2]);});
 
-//AXIS
+
+    //AXIS
 
     if (type === "scatter") {
       d3.select(".x-axis")
@@ -491,5 +496,3 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
     }
 };
 
-
-// Cluster Chart
