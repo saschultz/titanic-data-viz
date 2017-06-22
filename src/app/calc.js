@@ -467,7 +467,7 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
 
     var femaleLabel = svg.append("text")
           .attr("x", (margin.top + 568))
-          .attr("y", (margin.bottom))
+          .attr("y", (margin.bottom + 200))
           .attr("text-anchor", "right")
           .attr("class", "female")
           .style("font-size", "20px")
