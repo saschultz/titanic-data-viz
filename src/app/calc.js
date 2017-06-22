@@ -49,7 +49,7 @@ export var formatData = function(ageBreakdown) {
   delete ageBreakdown[NaN];
 
   let formattedData = [];
-  
+
   for (let i in ageBreakdown) {
     if (!ageBreakdown.hasOwnProperty(i)) continue;
 
@@ -104,13 +104,13 @@ export var ageByPercentage = function(ageBreakdown, totalAgeCount) {
 
   // console.log(agePercentages);
   // console.log(totalPercentage);
-  return agePercentages;    
+  return agePercentages;
 };
 
 
 //Input: min age in range, max age in range, {age: percentage of people of that age}. Output: percentage for that range (num).
 export var ageRangePercentage = function(min, max, agePercentages) {
-  let percentage = 0; 
+  let percentage = 0;
 
   for (let i in agePercentages) {
     if (!agePercentages.hasOwnProperty(i)) {continue;}
@@ -146,7 +146,7 @@ export var assignXY = function(genderArray) {
       currentFX = 45,
       currentFY = 10;
 
-  
+
   for (let i = 0; i < male.length; i+=20) {
     for (let j = 0; j < 21; j++) {
       if (i + j < male.length) {
@@ -174,7 +174,7 @@ export var assignXY = function(genderArray) {
   let maleFemale = male.concat(female);
   return maleFemale;
 
-  
+
 };
 
 
@@ -208,7 +208,7 @@ export var brain = function(titanicData, selectedGraph) {
 
 export var drawScatter = function(d3, preData) {
 
-  let dataArray = brain(preData, 2); 
+  let dataArray = brain(preData, 2);
 
   let data = dataArray[0],
       prop1 = dataArray[1],
@@ -221,10 +221,10 @@ export var drawScatter = function(d3, preData) {
 
   // set the ranges
 
- 
+
   var x = d3.scaleLinear().range([0, width]);
   var y = d3.scaleLinear().range([height, 0]);
- 
+
 
   // define the line
 
@@ -233,18 +233,22 @@ export var drawScatter = function(d3, preData) {
   // append the svg object to the body of the page
   // appends a 'group' element to 'svg'
   // moves the 'group' element to the top left margin
-  var svg = d3.select("div.graph").append("svg")
+  var svg = d3.select("body")
+    .append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
+  var div = d3.select("body").append("div")
+    .attr("class", "tooltip2")
+    .style("opacity", 0);
   // Get the data
   // d3.csv("titanic3.csv", function(error, data) {
   //   if (error) throw error;
 
-    
+
     // format the data
   data.forEach(function(d) {
       d[prop1] = +d[prop1]; // formats whatever d.age is in d3.csv to number
@@ -253,7 +257,7 @@ export var drawScatter = function(d3, preData) {
 
   // scale the range of the data
   // d3.extent([1, 4, 3, 2]) -> [1, 4]
-  
+
   x.domain(d3.extent(data, function(d) { return d[prop1]; })).nice();
   y.domain(d3.extent(data, function(d) { return d[prop2]; })).nice();
 
@@ -266,10 +270,22 @@ export var drawScatter = function(d3, preData) {
       .attr("r", 2.5)
       .attr("cx", function(d) { return x(d[prop1]); })
       .attr("cy", function(d) { return y(d[prop2]); })
+      .on('mouseover', function(d){
+        div.transition()
+          .duration(200)
+          .style("opacity", .9);
+        div.html(d.age)
+        .style("left", (d3.event.pageX) + "px")
+        .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on("mouseout", function(d) {
+        div.transition()
+          .duration(500)
+          .style("opacity", 0);})
       .on("click", function(d) {
         console.log(d);
       });
-      
+
   // add the X Axis
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -298,8 +314,8 @@ export var drawScatter = function(d3, preData) {
     setTimeout(function() {
       updateDrawScatter(d3, svg, x, y, height, width, preData, 2);
     }, 400);
-    
-  });    
+
+  });
 
   d3.select("#fare-age").on("click", function() {
     dance();
@@ -402,7 +418,7 @@ export var updateDrawScatter = function(d3, svg, x, y, height, width, preData, s
       .duration(900)
       .attr("cy", function() {return Math.random() * -60000;})
       .remove();
-    
+
     d3.selectAll("circle")
       .data(data)
       .transition()
