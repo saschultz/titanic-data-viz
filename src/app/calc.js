@@ -219,7 +219,7 @@ export var drawScatter = function(d3, preData) {
 
   var margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 1200 - margin.left - margin.right,
-      height = 550 - margin.top - margin.bottom;
+      height = 600 - margin.top - margin.bottom;
 
 
   // set the ranges
@@ -300,7 +300,14 @@ export var drawScatter = function(d3, preData) {
       .style("text-anchor", "middle")
       .text(prop2);
 
-  // add stat div
+  // title for graph on default load
+  svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 0 - (height / 100))
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .style("text-decoration", "underline")
+        .text("Number of Passengers per Age Group");
 
 
   //UPDATE GRAPH
@@ -376,7 +383,7 @@ export var drawScatter = function(d3, preData) {
         }
       });
   });
-};
+}; // END drawScatter FUNCTION
 
 export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, width, preData, selectedGraph) {
 
@@ -482,4 +489,4 @@ export var updateDrawScatter = function(d3, svg, x, y, xLabel, yLabel, height, w
           .duration(800);
 
     }
-};
+}; // END updateDrawScatter FUNCTION
