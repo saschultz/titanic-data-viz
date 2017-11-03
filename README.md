@@ -8,6 +8,8 @@
 
 _This web app provides a user driven graphical representation of data about passengers who were on the sunken Titanic vessel, sunk in 1912. The data represents 1,310 passengers of the 3,335 total passengers and crew onboard._
 
+![demo](src/assets/titanic-demo.gif)
+
 ## Data Source
 
 _Download Titanic passenger dataset: http://biostat.mc.vanderbilt.edu/wiki/pub/Main/DataSets/titanic3.xls_
@@ -39,6 +41,7 @@ $ touch src/app/api-keys.ts
    messagingSenderId: "Your API info"
  };
  ```
+* import data.json file to Firebase app and change rules for .read and .write to "true"
  ```
 $ ng serve
 $ open https://localhost:4200
